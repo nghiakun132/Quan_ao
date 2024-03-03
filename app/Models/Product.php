@@ -4,8 +4,40 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'category_id',
+        'brand_id',
+        'name',
+        'price',
+        'quantity',
+        'description',
+        'image',
+    ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class)->withDefault([
+            'name' => 'Danh mục đã xóa hoặc không tồn tại',
+        ]);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class)->withDefault([
+            'name' => 'Nhà sản xuất đã xóa hoặc không tồn tại',
+        ]);
+    }
+
+    public function size()
+    {
+        return $this->belongsToMany(Size::class, 'product_sizes', 'product_id', 'size_id')
+            ->withPivot('quantity');
+    }
 }

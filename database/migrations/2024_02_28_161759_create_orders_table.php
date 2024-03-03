@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->decimal('discount', 15, 2)->default(0);
+            $table->decimal('shipping_fee', 15, 2)->default(0);
             $table->decimal('total', 15, 2);
+            $table->string('coupon_code')->nullable();
             $table->integer('status')->default(0);
             $table->text('note')->nullable();
             $table->timestamps();

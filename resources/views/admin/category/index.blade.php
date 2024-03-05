@@ -22,7 +22,7 @@
                             <th>
                                 Danh mục cha
                             </th>
-                            <th>Thao tác</th>
+                            <th style="width: 13%">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,10 +31,10 @@
                                 <td>{{ $category->id }}</td>
                                 <td>{{ $category->name }}</td>
                                 <td>{{ $category->parent->name }}</td>
-                                <td>
-                                    <a class="btn btn-primary mb-2" onclick="showEdit('{{ $category->id }}')">Sửa</a>
+                                <td class="d-flex flex-column">
+                                    <a class="btn btn-primary m-2" onclick="showEdit('{{ $category->id }}')">Sửa</a>
                                     <a href="{{ route('admin.category.delete', $category->id) }}"
-                                        class="btn btn-danger">Xóa</a>
+                                        class="btn btn-danger m-2">Xóa</a>
                                 </td>
                             </tr>
                         @empty
@@ -73,7 +73,8 @@
                             <div class="col-12">
                                 <div class="form-select">
                                     <label for="">Danh mục cha</label>
-                                    <select name="parent_id" class="form-control">
+                                    <select id="select-gear" class="select2 " placeholder="Chọn danh mục cha"
+                                        name="parent_id">
                                         <option value="">--Chọn danh mục cha--</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -144,6 +145,9 @@
 
 @section('extra-scripts')
     <script>
+        $(function() {
+            $(".select2").selectize();
+        });
         $(document).ready(function() {
             $("#add-category-form").submit(function(e) {
                 console.log('scas');

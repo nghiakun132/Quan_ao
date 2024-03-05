@@ -8,8 +8,7 @@
         <div class="col-12">
             <form action="{{ route('admin.brand.update', $brand->id) }}" method="post">
                 @csrf
-                <div
-                    class="form-group
+                <div class="form-group
                     @error('name')
                         text-danger
                     @enderror">
@@ -21,8 +20,7 @@
                         </p>
                     @enderror
                 </div>
-                <div
-                    class="form-group
+                <div class="form-group
                     @error('email')
                         text-danger
                     @enderror">
@@ -34,8 +32,7 @@
                         </p>
                     @enderror
                 </div>
-                <div
-                    class="form-group
+                <div class="form-group
                     @error('phone')
                         text-danger
                     @enderror">
@@ -47,8 +44,7 @@
                         </p>
                     @enderror
                 </div>
-                <div
-                    class="form-group
+                <div class="form-group
                     @error('address')
                         text-danger
                     @enderror">

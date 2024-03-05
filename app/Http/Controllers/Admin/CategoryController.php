@@ -45,8 +45,8 @@ class CategoryController extends Controller
     public function edit(string $id)
     {
         $data = Category::where('id', $id)
-        ->with(['parent'])
-        ->first();
+            ->with(['parent'])
+            ->first();
 
         return response()->json(['data' => $data, 'status' => 200], 200);
     }

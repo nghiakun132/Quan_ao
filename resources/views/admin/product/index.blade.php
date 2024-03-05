@@ -31,7 +31,7 @@
                                 Mô tả
                             </th>
 
-                            <th style="width: 13%">
+                            <th style="width: 10%">
                                 Thao tác
                             </th>
                         </tr>
@@ -44,15 +44,15 @@
                                 <td>{{ $product->category->name }}</td>
                                 <td>{{ $product->brand->name }}</td>
                                 <td>
-                                    <img src="{{ $product->image }}" alt=""
-                                        style="width: 100px; height: 100px">
+                                    <img src="{{ $product->image }}" alt="" style="width: 100px; height: 100px">
                                 </td>
                                 <td>{{ number_format($product->price) }} VNĐ</td>
                                 <td>{{ $product->description }}</td>
                                 <td>
-                                    <a href="{{ route('admin.product.edit', $product->id) }}"
-                                        class="btn btn-primary  m-2">Sửa</a>
-                                    <a href="{{ route('admin.product.delete', $product->id) }}" class="btn btn-danger m-2"
+                                    <a href="{{ route('admin.product.edit', $product->id) }}" style="width: 90%"
+                                        class="btn btn-primary m-2">Sửa</a>
+                                    <a href="{{ route('admin.product.delete', $product->id) }}" style="width: 90%"
+                                        class="btn btn-danger m-2"
                                         onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
                                 </td>
                             </tr>

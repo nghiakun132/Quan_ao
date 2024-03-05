@@ -46,10 +46,8 @@ class Product extends Model
         return $this->hasMany(ProductImage::class);
     }
 
-
-
     public function getImageAttribute($value)
     {
-        return asset('storage/' . $value);
+        return asset('products/'.$value);
     }
 }

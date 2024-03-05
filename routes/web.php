@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+include_once "user.php";
 
 const ADMIN_PREFIX = 'admin';
 const THEM_MOI = 'them-moi';

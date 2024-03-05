@@ -68,9 +68,10 @@ class ProductController extends Controller
         ]);
 
         $avatar = $request->file('image');
-        $avatarName = $avatar->getClientOriginalName();
-
-        $path = Storage::putFileAs('products', $avatar, $avatarName);
+        if ($avatar) {
+            $avatarName = date('Ymdhis') . '_' . $avatar->getClientOriginalName();
+            $avatar->move(public_path('products'), $avatarName);
+        }
 
         $product = new Product();
         $product->name = $request->name;
@@ -79,7 +80,7 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
         $product->description = $request->description;
-        $product->image = $path;
+        $product->image = $avatarName;
         $product->save();
 
         $sizes = $request->size;
@@ -106,12 +107,12 @@ class ProductController extends Controller
 
         $productImages = [];
         foreach ($images as $image) {
-            $imageName = $image->getClientOriginalName();
-            $path = Storage::putFileAs('products', $image, $imageName);
+            $imageName = date('Ymdhis') . '_' . $image->getClientOriginalName();
+            $image->move(public_path('products'), $imageName);
 
             $productImages[] = [
                 'product_id' => $product->id,
-                'path' => $path,
+                'path' => $imageName,
             ];
         }
 
@@ -161,12 +162,12 @@ class ProductController extends Controller
             'description.max' => 'Mô tả không được quá 1000 ký tự',
         ]);
 
-        $avatar = $request->file('image')
-        ;
+        $avatar = $request->file('image');
+
         if ($avatar) {
-            $avatarName = $avatar->getClientOriginalName();
-            $path = Storage::putFileAs('products', $avatar, $avatarName);
-            $product->image = $path;
+            $avatarName = date("Ymdhis") . $avatar->getClientOriginalName();
+            $avatar->move(public_path('products'), $avatarName);
+            $product->image = $avatarName;
         }
 
         $product->name = $request->name;
@@ -207,12 +208,12 @@ class ProductController extends Controller
         $productImages = [];
         if ($images) {
             foreach ($images as $image) {
-                $imageName = $image->getClientOriginalName();
-                $path = Storage::putFileAs('products', $image, $imageName);
+                $imageName = date('Ymdhis') . $image->getClientOriginalName();
+                $image->move(public_path('products'), $imageName);
 
                 $productImages[] = [
                     'product_id' => $id,
-                    'path' => $path,
+                    'path' => $imageName,
                 ];
             }
         }

@@ -18,4 +18,9 @@ class Category extends Model
             'name' => 'Danh mục cha',
         ]);
     }
+
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
 }

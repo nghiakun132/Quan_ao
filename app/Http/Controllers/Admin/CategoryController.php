@@ -12,8 +12,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with(['parent'])
-        ->orderBy('id', 'DESC')->get();
+        $categories = Category::with(['children', 'parent'])
+            ->orderBy('id', 'DESC')->get();
 
         return view('admin.category.index', compact('categories'));
     }

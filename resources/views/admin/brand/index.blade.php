@@ -13,46 +13,48 @@
         </div>
 
         <div class="col-12 mt-2">
-            <table class="table table-bordered" id="example1">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tên</th>
-                        <th>
-                            Email
-                        </th>
-                        <th>
-                            Số điện thoại
-                        </th>
-                        <th>
-                            Địa chỉ
-                        </th>
-                        <th style="width: 13%">
-                            Thao tác
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($brands as $brand)
+            <div class="table-responsive">
+                <table class="table table-bordered" id="example1">
+                    <thead>
                         <tr>
-                            <td>{{ $brand->id }}</td>
-                            <td>{{ $brand->name }}</td>
-                            <td>{{ $brand->email }}</td>
-                            <td>{{ $brand->phone }}</td>
-                            <td>{{ $brand->address }}</td>
-                            <td class="d-flex flex-column">
-                                <a href="{{ route('admin.brand.edit', $brand->id) }}"
-                                    class="btn btn-primary mb-2">Sửa</a>
-                                <a href="{{ route('admin.brand.delete', $brand->id) }}" class="btn btn-danger">Xóa</a>
-                            </td>
+                            <th>ID</th>
+                            <th>Tên</th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Số điện thoại
+                            </th>
+                            <th>
+                                Địa chỉ
+                            </th>
+                            <th style="width: 13%">
+                                Thao tác
+                            </th>
                         </tr>
-                    @empty
-                        <tr class="text-center">
-                            <td colspan="6">Không có dữ liệu</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @forelse ($brands as $brand)
+                            <tr>
+                                <td>{{ $brand->id }}</td>
+                                <td>{{ $brand->name }}</td>
+                                <td>{{ $brand->email }}</td>
+                                <td>{{ $brand->phone }}</td>
+                                <td>{{ $brand->address }}</td>
+                                <td class="d-flex flex-column">
+                                    <a href="{{ route('admin.brand.edit', $brand->id) }}"
+                                        class="btn btn-primary mb-2">Sửa</a>
+                                    <a href="{{ route('admin.brand.delete', $brand->id) }}" class="btn btn-danger">Xóa</a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr class="text-center">
+                                <td colspan="6">Không có dữ liệu</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

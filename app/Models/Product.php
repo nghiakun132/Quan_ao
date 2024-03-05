@@ -38,6 +38,18 @@ class Product extends Model
     public function size()
     {
         return $this->belongsToMany(Size::class, 'product_sizes', 'product_id', 'size_id')
-            ->withPivot('quantity');
+            ->withPivot('quantity', 'id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
+
+
+    public function getImageAttribute($value)
+    {
+        return asset('storage/' . $value);
     }
 }

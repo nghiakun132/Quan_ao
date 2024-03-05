@@ -13,36 +13,38 @@
         </div>
 
         <div class="col-12 mt-2">
-            <table class="table table-bordered" id="example1">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tên danh mục</th>
-                        <th>
-                            Danh mục cha
-                        </th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($categories as $category)
+            <div class="table-responsive">
+                <table class="table table-bordered" id="example1">
+                    <thead>
                         <tr>
-                            <td>{{ $category->id }}</td>
-                            <td>{{ $category->name }}</td>
-                            <td>{{ $category->parent->name }}</td>
-                            <td>
-                                <a class="btn btn-primary" onclick="showEdit('{{ $category->id }}')">Sửa</a>
-                                <a href="{{ route('admin.category.delete', $category->id) }}"
-                                    class="btn btn-danger">Xóa</a>
-                            </td>
+                            <th>ID</th>
+                            <th>Tên danh mục</th>
+                            <th>
+                                Danh mục cha
+                            </th>
+                            <th>Thao tác</th>
                         </tr>
-                    @empty
-                        <tr class="text-center">
-                            <td colspan="4">Không có dữ liệu</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @forelse ($categories as $category)
+                            <tr>
+                                <td>{{ $category->id }}</td>
+                                <td>{{ $category->name }}</td>
+                                <td>{{ $category->parent->name }}</td>
+                                <td>
+                                    <a class="btn btn-primary mb-2" onclick="showEdit('{{ $category->id }}')">Sửa</a>
+                                    <a href="{{ route('admin.category.delete', $category->id) }}"
+                                        class="btn btn-danger">Xóa</a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr class="text-center">
+                                <td colspan="4">Không có dữ liệu</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

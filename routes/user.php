@@ -12,4 +12,5 @@ Route::post('dang-ky', [UserController::class, 'registerPost'])->name('user.regi
 Route::group(['middleware' => 'auth'], function () {
     Route::get("/", [HomeController::class, "index"])->name("home");
     Route::get("dang-xuat", [UserController::class, "logout"])->name("user.logout");
+    Route::get("thong-tin-ca-nhan", [UserController::class, "profile"])->name("user.profile");
 });

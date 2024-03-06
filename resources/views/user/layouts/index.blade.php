@@ -47,21 +47,15 @@
                     </div>
                 </div>
                 <div class="ht-right">
-                    @if (Auth::check())
-                        {{-- // Hiển thị tên người dùng và nút logout --}}
-                        <a href="{{ route('user.logout') }}" class="login-panel">
-                            <span class="mr-3">{{ Auth::user()->name }}</span>
-
-                            Logout</a>
+                    @if (!Auth::check())
+                        <a href="{{ route('user.login') }}" class="login-panel"><i class="fa fa-user"></i>Đăng nhập</a>
                     @else
-                        <a href="#" class="login-panel"><i class="fa fa-user"></i>Login</a>
+                        <a href="{{ route('user.logout') }}" class="login-panel"><i class="fa fa-user"></i>Đăng
+                            xuất</a>
+                        <div class="top-social">
+                            <div>Xin chào, <a href="{{ route('user.profile') }}">{{ Auth::user()->name }}</a></div>
+                        </div>
                     @endif
-                    <div class="top-social">
-                        <a href="#"><i class="ti-facebook"></i></a>
-                        <a href="#"><i class="ti-twitter-alt"></i></a>
-                        <a href="#"><i class="ti-linkedin"></i></a>
-                        <a href="#"><i class="ti-pinterest"></i></a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -71,18 +65,20 @@
                     <div class="col-lg-2 col-md-2">
                         <div class="logo">
                             <a href="">
-                                <img src="{{asset('user/img/logo.png')}}" alt="">
+                                <img src="{{ asset('user/img/logo.png') }}" alt="">
                             </a>
                         </div>
                     </div>
                     <div class="col-lg-7 col-md-7">
-                        <div class="advanced-search">
-                            <button type="button" class="category-btn">All Categories</button>
-                            <div class="input-group">
-                                <input type="text" placeholder="What do you need?">
-                                <button type="button"><i class="ti-search"></i></button>
+                        <form action="">
+                            <div class="advanced-search">
+                                <button type="button" class="category-btn">All Categories</button>
+                                <div class="input-group">
+                                    <input type="text" placeholder="What do you need?">
+                                    <button type="button"><i class="ti-search"></i></button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="col-lg-3 text-right col-md-3">
                         <ul class="nav-right">
@@ -102,7 +98,8 @@
                                         <table>
                                             <tbody>
                                                 <tr>
-                                                    <td class="si-pic"><img src="{{asset('user/img/select-product-1.jpg')}}"
+                                                    <td class="si-pic"><img
+                                                            src="{{ asset('user/img/select-product-1.jpg') }}"
                                                             alt=""></td>
                                                     <td class="si-text">
                                                         <div class="product-selected">
@@ -115,7 +112,8 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="si-pic"><img src="{{asset('user/img/select-product-2.jpg')}}"
+                                                    <td class="si-pic"><img
+                                                            src="{{ asset('user/img/select-product-2.jpg') }}"
                                                             alt=""></td>
                                                     <td class="si-text">
                                                         <div class="product-selected">
@@ -136,8 +134,8 @@
                                         <h5>$120.00</h5>
                                     </div>
                                     <div class="select-button">
-                                        <a href="#" class="primary-btn view-card">VIEW CARD</a>
-                                        <a href="#" class="primary-btn checkout-btn">CHECK OUT</a>
+                                        <a href="#" class="primary-btn view-card">Xem hiỏ hàng</a>
+                                        <a href="#" class="primary-btn checkout-btn">Thanh toán</a>
                                     </div>
                                 </div>
                             </li>
@@ -194,18 +192,12 @@
             </div>
         </div>
     </header>
-    <!-- Header End -->
     <div>
         @yield('content')
-
     </div>
-    <!-- Partner Logo Section End -->
 
-    <!-- Footer Section Begin -->
     @include('user.layouts.footer')
-    <!-- Footer Section End -->
 
-    <!-- Js Plugins -->
     <script src="{{ asset('user/js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('user/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('user/js/jquery-ui.min.js') }}"></script>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\User\CategoryController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -13,4 +14,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get("/", [HomeController::class, "index"])->name("home");
     Route::get("dang-xuat", [UserController::class, "logout"])->name("user.logout");
     Route::get("thong-tin-ca-nhan", [UserController::class, "profile"])->name("user.profile");
+
+
+    Route::prefix('danh-muc')->group(function () {
+        Route::get('/{slug}', [CategoryController::class, 'index'])->name('user.category.index');
+    });
 });

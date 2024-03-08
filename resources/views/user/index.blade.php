@@ -393,7 +393,7 @@
     <!-- Instagram Section End -->
 
     <!-- Latest Blog Section Begin -->
-    <section class="latest-blog spad">
+    {{-- <section class="latest-blog spad">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -508,7 +508,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- Latest Blog Section End -->
 
     <!-- Partner Logo Section Begin -->

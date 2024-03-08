@@ -27,7 +27,7 @@
                             @csrf
                             <div class="group-input">
                                 <label for="username">Email*</label>
-                                <input type="text" name="email" value="{{ old('email') }}">
+                                <input type="text" name="email" value="{{!empty($email) ? $email : old('email')}}" id="username" required>
 
                                 @if ($errors->has('email'))
                                     <span class="text-danger">{{ $errors->first('email') }}</span>
@@ -35,7 +35,7 @@
                             </div>
                             <div class="group-input">
                                 <label for="pass">Mật khẩu*</label>
-                                <input type="password" id="pass" name="password">
+                                <input type="password" id="pass" name="password" value="{{!empty($password) ? $password : old('password')}}" required>
 
                                 @if ($errors->has('password'))
                                     <span class="text-danger">{{ $errors->first('password') }}</span>
@@ -46,7 +46,7 @@
                                     <label for="save-pass">
                                         Lưu mật khẩu
                                         <input type="checkbox" id="save-pass" name="remember"
-                                            {{ old('remember') ? 'checked' : '' }}>
+                                            {{ old('remember') || !empty($remember) ? 'checked' : '' }}>
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>

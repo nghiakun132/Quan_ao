@@ -23,4 +23,22 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
+
+    public function childrenRecursive()
+    {
+        return $this->hasMany(Category::class, 'parent_id', 'id')->with('childrenRecursive');
+    }
+
+    public function getDescendantNamesAttribute()
+    {
+        $descendants = collect([$this->id]);
+
+        if ($this->relationLoaded('childrenRecursive') && $this->childrenRecursive->isNotEmpty()) {
+            foreach ($this->childrenRecursive as $child) {
+                $descendants = $descendants->merge($child->descendantNames);
+            }
+        }
+
+        return $descendants->toArray();
+    }
 }

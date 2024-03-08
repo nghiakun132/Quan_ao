@@ -48,6 +48,6 @@ class Product extends Model
 
     public function getImageAttribute($value)
     {
-        return asset('products/'.$value);
+        return asset($value);
     }
 }

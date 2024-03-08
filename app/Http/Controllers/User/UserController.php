@@ -6,13 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public function login()
     {
-        return view('user.login');
+        $email = Cookie::get('email');
+        $password = Cookie::get('password');
+        $remember = Cookie::get('remember');
+
+        return view('user.login', compact('email', 'password', 'remember'));
     }
 
     public function loginPost(Request $request)
@@ -32,12 +37,11 @@ class UserController extends Controller
 
         if (Auth::attempt($user)) {
             if ($request->remember == 'on') {
-                setcookie('email', $request->email, time() + 60 * 60 * 24 * 30);
-                setcookie('password', $request->password, time() + 60 * 60 * 24 * 30);
-            } else {
-                setcookie('email', '', time() - 3600);
-                setcookie('password', '', time() - 3600);
+                Cookie::queue('email', $request->email, 60 * 24 * 30);
+                Cookie::queue('password', $request->password, 60 * 24 * 30);
+                Cookie::queue('remember', 'on', 60 * 24 * 30);
             }
+
             return redirect()->route('home');
         } else {
             return redirect()->route('login');
@@ -87,5 +91,10 @@ class UserController extends Controller
     public function profile(Request $request)
     {
         return view('user.profile');
+    }
+
+    public function getWhiteList(Request $request)
+    {
+        return view('user.white_list');
     }
 }

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('price', 15, 2);
             $table->integer('quantity')->default(0);
 
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->timestamps();
         });
     }

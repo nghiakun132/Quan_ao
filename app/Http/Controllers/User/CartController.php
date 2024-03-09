@@ -11,4 +11,10 @@ class CartController extends Controller
     {
         return view('user.cart.index');
     }
+
+    public function addToCart(Request $request)
+    {
+        $data = $request->all();
+        dd($data);
+    }
 }

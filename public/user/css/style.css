@@ -1806,7 +1806,7 @@ ol {
 .filter-widget .filter-range-wrap .range-slider .price-input input {
 	font-size: 16px;
 	color: #252525;
-	max-width: 20%;
+	max-width: 40%;
 	text-align: center;
 	border: 1px solid #ebebeb;
 	border-radius: 2px;
@@ -1856,6 +1856,18 @@ ol {
 	display: inline-block;
 	text-transform: uppercase;
 }
+
+.filter-widget .reset-btn {
+	font-size: 14px;
+	font-weight: 700;
+	background: #a6a6a6;
+	color: #ffffff;
+	padding: 7px 20px 5px;
+	border-radius: 2px;
+	display: inline-block;
+	text-transform: uppercase;
+}
+
 
 .filter-widget .fw-color-choose .cs-item {
 	width: 50%;
@@ -2009,7 +2021,7 @@ ol {
 	position: absolute;
 	right: 48px;
 	top: 0;
-	content: "09";
+	content: "";
 	font-size: 16px;
 	color: #252525;
 }
@@ -4309,4 +4321,10 @@ ol {
 		padding-left: 15px;
 		padding-right: 15px;
 	}
+}
+
+.out-stock{
+	color: #f3eeee !important;
+    background-color: #f01111 !important;
+	cursor: not-allowed !important;
 }

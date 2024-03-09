@@ -6,6 +6,7 @@
     <meta name="description" content="Cửa hàng thời trang">
     <meta name="keywords" content="Fashi, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>
         @yield('title', 'Trang chủ')
@@ -24,6 +25,9 @@
     <link rel="stylesheet" href="{{ asset('user/css/jquery-ui.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('user/css/slicknav.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('user/css/style.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.css') }}">
+
+
 </head>
 
 <body>
@@ -154,13 +158,17 @@
             <div class="container">
                 <nav class="nav-menu mobile-menu">
                     <ul>
-                        <li class="active"><a href="./index.html">Home</a></li>
+                        <li class=" {{ request()->is('/') ? 'active' : '' }}"><a href="{{ route('home') }}">Trang
+                                chủ
+                            </a></li>
                         @foreach ($categories_global as $cg)
                             @if ($cg->children->count() > 0)
-                                <li><a href="{{ route('user.category.index', $cg->slug) }}">{{ $cg->name }}</a>
+                                <li class=" {{ request()->is('danh-muc/' . $cg->slug) ? 'active' : '' }}">
+                                     <a
+                                        href="{{ route('user.category.index', $cg->slug) }}">{{ $cg->name }}</a>
                                     <ul class="dropdown">
                                         @foreach ($cg->children as $child)
-                                            <li>
+                                            <li class=" {{ request()->is('danh-muc/' . $child->slug) ? 'active' : '' }}">
                                                 <a href="{{ route('user.category.index', $child->slug) }}">
                                                     {{ $child->name }}
                                                 </a>
@@ -169,7 +177,8 @@
                                     </ul>
                                 </li>
                             @else
-                                <li><a href="{{ route('user.category.index', $cg->slug) }}">{{ $cg->name }}</a>
+                                <li class=" {{ request()->is('danh-muc/' . $cg->slug) ? 'active' : '' }}">
+                                    <a href="{{ route('user.category.index', $cg->slug) }}">{{ $cg->name }}</a>
                                 </li>
                             @endif
                         @endforeach
@@ -196,6 +205,9 @@
     <script src="{{ asset('user/js/jquery.slicknav.js') }}"></script>
     <script src="{{ asset('user/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('user/js/main.js') }}"></script>
+    <script src="{{ asset('user/js/cart.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
+
 </body>
 
 </html>

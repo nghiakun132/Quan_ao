@@ -12,6 +12,12 @@ class Category extends Model
 
     protected $table = 'categories';
 
+    protected $fillable = [
+        'name',
+        'slug',
+        'parent_id',
+    ];
+
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id')->withDefault([
@@ -31,7 +37,7 @@ class Category extends Model
 
     public function getDescendantNamesAttribute()
     {
-        $descendants = collect([$this->id]);
+        $descendants = collect([$this->id, $this->name]);
 
         if ($this->relationLoaded('childrenRecursive') && $this->childrenRecursive->isNotEmpty()) {
             foreach ($this->childrenRecursive as $child) {

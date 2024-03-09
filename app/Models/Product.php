@@ -19,6 +19,7 @@ class Product extends Model
         'quantity',
         'description',
         'image',
+        'sale',
     ];
 
     public function category()
@@ -48,6 +49,6 @@ class Product extends Model
 
     public function getImageAttribute($value)
     {
-        return asset($value);
+        return asset('products/' . $value);
     }
 }

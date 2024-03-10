@@ -4328,3 +4328,12 @@ ol {
     background-color: #f01111 !important;
 	cursor: not-allowed !important;
 }
+
+.btn-remove{
+	color: #030101 !important;
+	cursor: pointer !important;
+}
+
+.btn-remove:hover{
+	color: #f01111 !important;
+}

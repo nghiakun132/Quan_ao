@@ -1,5 +1,5 @@
 @extends('user.layouts.index')
-@section('title', 'Product')
+@section('title', $product->name)
 @section('content')
     <div class="breacrumb-section">
         <div class="container">
@@ -25,6 +25,7 @@
         <div class="container">
             <div class="row">
                 <input type="hidden" id="product_id" value="{{ $product->id }}">
+                <input type="hidden" id="user_id" value="{{auth()->id()}}">
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-6">
@@ -133,7 +134,7 @@
                                 <div class="tab-pane fade" id="tab-2" role="tabpanel">
                                     <div class="specification-table">
                                         <table>
-                                            <tr>
+                                            {{-- <tr>
                                                 <td class="p-catagory">Customer Rating</td>
                                                 <td>
                                                     <div class="pd-rating">
@@ -145,45 +146,37 @@
                                                         <span>(5)</span>
                                                     </div>
                                                 </td>
-                                            </tr>
+                                            </tr> --}}
                                             <tr>
-                                                <td class="p-catagory">Price</td>
+                                                <td class="p-catagory">Giá</td>
                                                 <td>
-                                                    <div class="p-price">$495.00</div>
+                                                    <div class="p-price">
+                                                        {{ number_format($product->price) }} VNĐ
+                                                        @if ($product->sale != 0)
+                                                            <code>
+                                                                {{ number_format($product->price + ($product->price * $product->sale) / 100) }}
+                                                                VNĐ
+                                                            </code>
+                                                        @endif
+                                                    </div>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="p-catagory">Add To Cart</td>
-                                                <td>
-                                                    <div class="cart-add">+ add to cart</div>
+                                                <td class="p-catagory">
+                                                    Số lượng
                                                 </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-catagory">Availability</td>
                                                 <td>
-                                                    <div class="p-stock">22 in stock</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-catagory">Weight</td>
-                                                <td>
-                                                    <div class="p-weight">1,3kg</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-catagory">Size</td>
-                                                <td>
-                                                    <div class="p-size">Xxl</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-catagory">Color</td>
-                                                <td><span class="cs-color"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-catagory">Sku</td>
-                                                <td>
-                                                    <div class="p-code">00012</div>
+                                                    <div class="p-stock">
+                                                        <ul class="lisr-group">
+                                                            @foreach ($product->size as $size)
+                                                                <li class="list-group-item">
+                                                                    <span>{{ $size->name }}</span>:
+                                                                    <span>{{ $size->pivot->quantity != 0 ?$size->pivot->quantity : 'Hết hang' }}</span>
+                                                                </li>
+                                                            @endforeach
+
+                                                        </ul>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </table>

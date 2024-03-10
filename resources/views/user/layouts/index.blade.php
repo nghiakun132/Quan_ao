@@ -52,9 +52,11 @@
                 </div>
                 <div class="ht-right">
                     @if (!Auth::check())
-                        <a href="{{ route('user.login') }}" class="login-panel"><i class="fa fa-user"></i>Đăng nhập</a>
+                        <a href="{{ route('user.login') }}" class="login-panel">
+                            <i class="fa fa-sign-in">
+                            </i>Đăng nhập</a>
                     @else
-                        <a href="{{ route('user.logout') }}" class="login-panel"><i class="fa fa-user"></i>Đăng
+                        <a href="{{ route('user.logout') }}" class="login-panel"><i class="fa fa-sign-out"></i>Đăng
                             xuất</a>
                         <div class="top-social">
                             <div>Xin chào, <a href="{{ route('user.profile') }}">{{ Auth::user()->name }}</a></div>
@@ -112,13 +114,13 @@
                                                     <tr>
                                                         <td class="si-pic"><img src="{{ $cart->product->image }}"
                                                                 width="80" height="80"
-                                                                alt="{{ $cart->product->name }}"></td>
+                                                                alt="{{ $cart->product->name }} - {{$cart->size->name}}"></td>
                                                         <td class="si-text">
                                                             <div class="product-selected">
                                                                 <p>{{ number_format($cart->product->price) }} x
                                                                     {{ $cart->quantity }}</p>
                                                                 <h6>
-                                                                    {{ $cart->product->name }}
+                                                                    {{ $cart->product->name }} - {{$cart->size->name}}
                                                                 </h6>
                                                             </div>
                                                         </td>
@@ -208,6 +210,9 @@
     <script src="{{ asset('user/js/cart.js') }}"></script>
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
 
+    @yield('extra-scripts')
+
+    @include('user.layouts.alert')
 </body>
 
 </html>

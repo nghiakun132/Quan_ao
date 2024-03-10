@@ -20,9 +20,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get("thong-tin-ca-nhan", [UserController::class, "profile"])->name("user.profile");
 
     Route::get('gio-hang', [CartController::class, 'index'])->name('user.cart');
+    Route::post('/gio-hang', [CartController::class, 'update'])->name('user.cart.update');
+    Route::get('/gio-hang/xoa', [CartController::class, 'clean'])->name('user.cart.clean');
+    Route::get('/gio-hang/xoa-san-pham/{id}', [CartController::class, 'remove'])->name('user.cart.remove');
 });
 
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('user.add_to_cart');
+
 Route::get("/", [HomeController::class, "index"])->name("home");
 Route::prefix('danh-muc')->group(function () {
     Route::get('/{slug}', [CategoryController::class, 'index'])->name('user.category.index');

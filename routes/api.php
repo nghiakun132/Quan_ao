@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MasterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::get('/provinces', [MasterController::class, 'getProvinces'])->name('api.provinces');
+Route::get('/districts/{provinceId}', [MasterController::class, 'getDistricts'])->name('api.districts');
+Route::get('/wards/{districtId}', [MasterController::class, 'getWards'])->name('api.wards');

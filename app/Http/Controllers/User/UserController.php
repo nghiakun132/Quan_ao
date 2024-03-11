@@ -52,7 +52,9 @@ class UserController extends Controller
     {
         Auth::logout();
 
-        return redirect()->route('home');
+        return redirect()->route('home')->withCookie(Cookie::forget('email'))
+            ->withCookie(Cookie::forget('password'))
+            ->withCookie(Cookie::forget('remember'))->with('success', 'Đăng xuất thành công');
     }
 
     public function register(Request $request)
@@ -64,6 +66,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'email' => 'required|email|unique:users,email',
+            'name' => 'required|max:50',
             'password' => 'required|min:6|max:20',
             'password_confirmation' => 'required|same:password'
         ], [
@@ -74,18 +77,22 @@ class UserController extends Controller
             'password.min' => 'Mật khẩu ít nhất 6 ký tự',
             'password.max' => 'Mật khẩu không quá 20 ký tự',
             'password_confirmation.required' => 'Mật khẩu xác nhận không được để trống',
-            'password_confirmation.same' => 'Mật khẩu xác nhận không khớp'
+            'password_confirmation.same' => 'Mật khẩu xác nhận không khớp',
+            'name.required' => 'Tên không được để trống',
+            'name.min' => 'Tên ít nhất 6 ký tự',
+            'name.max' => 'Tên không quá 50 ký tự'
         ]);
 
 
         $user = new User([
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
         $user->save();
 
-        return redirect()->route('home');
+        return redirect()->route('home')->with('success', 'Đăng ký tài khoản thành công');
     }
 
     public function profile(Request $request)

@@ -23,6 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/gio-hang', [CartController::class, 'update'])->name('user.cart.update');
     Route::get('/gio-hang/xoa', [CartController::class, 'clean'])->name('user.cart.clean');
     Route::get('/gio-hang/xoa-san-pham/{id}', [CartController::class, 'remove'])->name('user.cart.remove');
+    Route::get('/gio-hang/thanh-toan', [CartController::class, 'checkout'])->name('user.cart.checkout');
 });
 
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('user.add_to_cart');

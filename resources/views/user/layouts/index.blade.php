@@ -114,13 +114,15 @@
                                                     <tr>
                                                         <td class="si-pic"><img src="{{ $cart->product->image }}"
                                                                 width="80" height="80"
-                                                                alt="{{ $cart->product->name }} - {{$cart->size->name}}"></td>
+                                                                alt="{{ $cart->product->name }} - {{ $cart->size->name }}">
+                                                        </td>
                                                         <td class="si-text">
                                                             <div class="product-selected">
                                                                 <p>{{ number_format($cart->product->price) }} x
                                                                     {{ $cart->quantity }}</p>
                                                                 <h6>
-                                                                    {{ $cart->product->name }} - {{$cart->size->name}}
+                                                                    {{ $cart->product->name }} -
+                                                                    {{ $cart->size->name }}
                                                                 </h6>
                                                             </div>
                                                         </td>
@@ -143,8 +145,10 @@
                                         <h5>{{ number_format($total) }}</h5>
                                     </div>
                                     <div class="select-button">
-                                        <a href="#" class="primary-btn view-card">Xem giỏ hàng</a>
-                                        <a href="#" class="primary-btn checkout-btn">Thanh toán</a>
+                                        <a href="{{ route('user.cart') }}" class="primary-btn view-card">Xem giỏ
+                                            hàng</a>
+                                        <a href="{{ route('user.cart.checkout') }}"
+                                            class="primary-btn checkout-btn">Thanh toán</a>
                                     </div>
                                 </div>
                             </li>
@@ -166,11 +170,11 @@
                         @foreach ($categories_global as $cg)
                             @if ($cg->children->count() > 0)
                                 <li class=" {{ request()->is('danh-muc/' . $cg->slug) ? 'active' : '' }}">
-                                     <a
-                                        href="{{ route('user.category.index', $cg->slug) }}">{{ $cg->name }}</a>
+                                    <a href="{{ route('user.category.index', $cg->slug) }}">{{ $cg->name }}</a>
                                     <ul class="dropdown">
                                         @foreach ($cg->children as $child)
-                                            <li class=" {{ request()->is('danh-muc/' . $child->slug) ? 'active' : '' }}">
+                                            <li
+                                                class=" {{ request()->is('danh-muc/' . $child->slug) ? 'active' : '' }}">
                                                 <a href="{{ route('user.category.index', $child->slug) }}">
                                                     {{ $child->name }}
                                                 </a>

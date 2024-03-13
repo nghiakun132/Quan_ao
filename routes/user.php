@@ -3,6 +3,7 @@
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\CategoryController;
 use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\ProductController;
 use App\Http\Controllers\User\SearchController;
 use App\Http\Controllers\User\UserController;
@@ -25,6 +26,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/gio-hang/xoa-san-pham/{id}', [CartController::class, 'remove'])->name('user.cart.remove');
     Route::get('/gio-hang/thanh-toan', [CartController::class, 'checkout'])->name('user.cart.checkout');
     Route::post('/gio-hang/thanh-toan', [CartController::class, 'checkoutPost'])->name('user.cart.checkout.post');
+    Route::get('/don-hang', [OrderController::class, 'index'])->name('user.order');
+    Route::get('/don-hang/{code}', [OrderController::class, 'show'])->name('user.order.show');
+    Route::get('/huy-don-hang/{code}', [OrderController::class, 'cancel'])->name('user.order.cancel');
 });
 
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('user.add_to_cart');

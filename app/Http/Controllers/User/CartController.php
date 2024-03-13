@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Address;
 use App\Models\Cart;
 use App\Models\District;
 use App\Models\Order;
@@ -12,6 +13,7 @@ use App\Models\ProductSize;
 use App\Models\Province;
 use App\Models\User;
 use App\Models\Ward;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -158,42 +160,45 @@ class CartController extends Controller
             Cache::forever('provinces', $provinces);
         }
 
-        if (Cache::has('districts')) {
-            $districts = Cache::get('districts_' . $address->province);
-        } else {
-            $districts = District::where('province_id', $address->province)->pluck('name', 'id')->toArray();
+        if (!empty($address)) {
 
-            $districts = collect($districts)->map(function ($value, $key) {
-                return [
-                    'id' => $key,
-                    'name' => $value,
-                ];
-            })->toArray();
 
-            Cache::forever('districts_' . $address->province, $districts);
+            if (Cache::has('districts')) {
+                $districts = Cache::get('districts_' . $address->province);
+            } else {
+                $districts = District::where('province_id', $address->province)->pluck('name', 'id')->toArray();
+
+                $districts = collect($districts)->map(function ($value, $key) {
+                    return [
+                        'id' => $key,
+                        'name' => $value,
+                    ];
+                })->toArray();
+
+                Cache::forever('districts_' . $address->province, $districts);
+            }
+
+            if (Cache::has('wards_' . $address->district)) {
+                $wards = Cache::get('wards_' . $address->district);
+            } else {
+                $wards = Ward::where('district_id', $address->district)->pluck('name', 'id')->toArray();
+
+                $wards = collect($wards)->map(function ($value, $key) {
+                    return [
+                        'id' => $key,
+                        'name' => $value,
+                    ];
+                })->toArray();
+
+                Cache::forever('wards_' . $address->district, $wards);
+            }
         }
-
-        if (Cache::has('wards_' . $address->district)) {
-            $wards = Cache::get('wards_' . $address->district);
-        } else {
-            $wards = Ward::where('district_id', $address->district)->pluck('name', 'id')->toArray();
-
-            $wards = collect($wards)->map(function ($value, $key) {
-                return [
-                    'id' => $key,
-                    'name' => $value,
-                ];
-            })->toArray();
-
-            Cache::forever('wards_' . $address->district, $wards);
-        }
-
         $data = [
             'carts' => $carts,
             'address' => $address,
-            'provinces' => $provinces,
-            'districts' => $districts,
-            'wards' => $wards,
+            'provinces' => $provinces ?? [],
+            'districts' => $districts ?? [],
+            'wards' => $wards ?? [],
         ];
 
         return view('user.cart.checkout', $data);
@@ -201,6 +206,7 @@ class CartController extends Controller
 
     public function checkoutPost(Request $request)
     {
+
         DB::beginTransaction();
         try {
 
@@ -234,6 +240,7 @@ class CartController extends Controller
             }
 
             $order = new Order();
+            $order->code = 'DH' . '-' . auth()->id() . Carbon::now()->format('YmdHis');
             $order->user_id = auth()->id();
             $order->shipping_fee = 0;
             $order->total = $total;
@@ -258,6 +265,21 @@ class CartController extends Controller
                 'district' => $request->district,
                 'ward' => $request->ward,
             ]);
+
+            if ($request->input('save_address') == 'on') {
+                Address::where('user_id', auth()->id())->update(['is_default' => 0]);
+
+                Address::create([
+                    'user_id' => auth()->id(),
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'address' => $request->address,
+                    'province' => $request->province,
+                    'district' => $request->district,
+                    'ward' => $request->ward,
+                    'is_default' => 1,
+                ]);
+            }
 
             Cart::where('user_id', auth()->user()->id)->delete();
 

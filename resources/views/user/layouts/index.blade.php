@@ -58,7 +58,7 @@
                     @else
                         <a href="{{ route('user.logout') }}" class="login-panel"><i class="fa fa-sign-out"></i>Đăng
                             xuất</a>
-                        <div class="top-social">
+                        <div class="top-social display-mobile">
                             <div>Xin chào, <a href="{{ route('user.profile') }}">{{ Auth::user()->name }}</a></div>
                         </div>
                     @endif
@@ -88,6 +88,12 @@
                     <div class="col-lg-3 text-right col-md-3">
                         <ul class="nav-right">
                             <li class="heart-icon">
+                                <a href="{{route('user.order')}}">
+                                    {{-- order --}}
+                                    <i class="icon_bag_alt"></i>
+                                </a>
+                            </li>
+                            <li class="heart-icon">
                                 <a href="{{ route('user.white_list') }}">
                                     <i class="icon_heart_alt"></i>
                                     <span>
@@ -97,7 +103,7 @@
                             </li>
                             <li class="cart-icon">
                                 <a href="{{ route('user.cart') }}">
-                                    <i class="icon_bag_alt"></i>
+                                    <i class="ti-shopping-cart"></i>
                                     <span>
                                         {{ $cart_global->count() }}
                                     </span>

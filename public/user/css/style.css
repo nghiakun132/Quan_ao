@@ -464,7 +464,7 @@ ol {
 }
 
 .inner-header .advanced-search .input-group {
-	max-width: 70%;
+	max-width: 100%;
 	height: 100%;
 }
 
@@ -4336,4 +4336,8 @@ ol {
 
 .btn-remove:hover{
 	color: #f01111 !important;
+}
+
+select{
+	margin-bottom: 25px !important;
 }

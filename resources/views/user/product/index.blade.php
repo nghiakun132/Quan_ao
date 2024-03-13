@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb-text product-more">
-                        <a href="./home.html"><i class="fa fa-home"></i> Trang chủ</a>
+                        <a href="{{route('home')}}"><i class="fa fa-home"></i> Trang chủ</a>
                         <a href="{{ route('user.category.index', $product->category->slug) }}">
                             {{ $product->category->name }}
                         </a>

@@ -9,10 +9,17 @@ class Order extends Model
 {
     use HasFactory;
 
+    const PENDING = 0;
+    const APPROVED = 1;
+    const DELIVERING = 2;
+    const DELIVERED = 3;
+    const CANCEL = 4;
+
     protected $table = 'orders';
 
     protected $fillable = [
         'user_id',
+        'code',
         'discount',
         'shipping_fee',
         'total',
@@ -20,4 +27,8 @@ class Order extends Model
         'status',
         'note'
     ];
+
+    public function details(){
+        return $this->hasMany(OrderDetail::class, 'order_id', 'id');
+    }
 }

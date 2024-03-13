@@ -28,15 +28,15 @@
                         </h4>
                         <div class="row">
                             <div class="col-lg-12">
-                                <label for="last">Tên<span>*</span></label>
+                                <label for="name">Tên<span>*</span></label>
                                 <input type="text" name="name" id="name" value="{{ $address->name ?? '' }}">
                             </div>
                             <div class="col-lg-12">
-                                <label for="last">Số điện thoại<span>*</span></label>
+                                <label for="phone">Số điện thoại<span>*</span></label>
                                 <input type="text" name="phone" id="phone" value="{{ $address->phone ?? '' }}">
                             </div>
                             <div class="col-lg-4">
-                                <label for="cun">Tỉnh<span>*</span></label>
+                                <label for="province">Tỉnh<span>*</span></label>
                                 <select class="custom-select" id="province" name="province">
                                     <option value="">Chọn tỉnh/ thành phố</option>
                                     @foreach ($provinces as $province)
@@ -48,7 +48,7 @@
                                 </select>
                             </div>
                             <div class="col-lg-4">
-                                <label for="street">Quận/ Huyện<span>*</span></label>
+                                <label for="district">Quận/ Huyện<span>*</span></label>
                                 <select class="custom-select" id="district" name="district">
                                     <option value="">Chọn quận/ huyện</option>
                                     @if (!empty($address) && !empty($address->district))
@@ -63,7 +63,7 @@
                                 </select>
                             </div>
                             <div class="col-lg-4">
-                                <label for="cun-name">Phường/ Xã</label>
+                                <label for="ward">Phường/ Xã</label>
                                 <select class="custom-select" id="ward" name="ward">
                                     <option value="">Chọn phường/ xã</option>
                                     @if (!empty($address) && !empty($address->ward))
@@ -77,13 +77,18 @@
                                 </select>
                             </div>
                             <div class="col-lg-12">
-                                <label for="street">Địa chỉ cụ thể<span>*</span></label>
+                                <label for="address">Địa chỉ cụ thể<span>*</span></label>
                                 <input type="text" name="address" id="address" value="{{ $address->address ?? '' }}">
                             </div>
                             <div class="col-lg-12">
-                                <label for="street">Ghi chú</label>
+                                <label for="note">Ghi chú</label>
                                 <textarea name="note" id="note" cols="30" rows="5" class="form-control">{{ $address->note ?? '' }}
                                 </textarea>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <label for="save_address">Lưu thông tin địa chỉ</label>
+                                <input type="checkbox" id="save_address" name="save_address" style="height: 20px" />
                             </div>
                         </div>
                     </div>
@@ -98,7 +103,7 @@
                                     @endphp
                                     @foreach ($carts as $cart)
                                         <li class="fw-normal">
-                                            {{ $cart->product->name }} ({{$cart->size->name}}) x {{ $cart->quantity }}
+                                            {{ $cart->product->name }} ({{ $cart->size->name }}) x {{ $cart->quantity }}
                                             <span>{{ number_format($cart->product->price * $cart->quantity) }}đ
                                             </span>
                                         </li>
@@ -110,7 +115,8 @@
                                     <li class="total-price">Tổng tiền <span>{{ number_format($total) }}đ</span></li>
                                 </ul>
                                 <div class="order-btn">
-                                    <button type="button" onclick="submitOrder(event)" class="site-btn place-btn">Đặt hàng</button>
+                                    <button type="button" onclick="submitOrder(event)" class="site-btn place-btn">Đặt
+                                        hàng</button>
                                 </div>
                             </div>
                         </div>
@@ -126,6 +132,17 @@
     <script>
         function submitOrder(e) {
             e.preventDefault();
+
+            let total = '{{ count($carts) }}';
+
+            if(total == 0) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Giỏ hàng của bạn đang trống!',
+                });
+            }
+
             var name = $('#name').val();
             var phone = $('#phone').val();
             var province = $('#province').val();
@@ -133,14 +150,13 @@
             var ward = $('#ward').val();
             var address = $('#address').val();
 
-            // if (name == '' || phone == '' || province == '' || district == '' || ward == '' || address == '') {
-            //     return Swal.fire({
-            //         icon: 'error',
-            //         title: 'Oops...',
-            //         text: 'Vui lòng nhập đầy đủ thông tin!',
-            //     });
-
-            // }
+            if (name == '' || phone == '' || province == '' || district == '' || ward == '' || address == '') {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Vui lòng nhập đầy đủ thông tin!',
+                });
+            }
 
             $("#checkout-form").submit();
 

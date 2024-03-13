@@ -4,9 +4,34 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Address extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'name',
+        'phone',
+        'address',
+        'is_default',
+        'province',
+        'district',
+        'ward',
+    ];
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class, 'province');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district');
+    }
+
+    public function ward()
+    {
+        return $this->belongsTo(Ward::class, 'ward');
+    }
 }

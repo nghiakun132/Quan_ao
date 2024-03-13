@@ -1,7 +1,7 @@
 function addToCart()
 {
         let quantity = $('input[name="quantity"]').val();
-        let size = $('input[name="size"]:checked').val();
+        let size = $('#size').val();
         let user_id = $('#user_id').val();
 
 

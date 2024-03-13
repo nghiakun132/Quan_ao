@@ -19,7 +19,8 @@
     <!-- Shopping Cart Section Begin -->
     <section class="checkout-section spad">
         <div class="container">
-            <form action="#" class="checkout-form">
+            <form action="{{ route('user.cart.checkout.post') }}" class="checkout-form" id="checkout-form" method="POST">
+                @csrf
                 <div class="row">
                     <div class="col-lg-7">
                         <h4>
@@ -28,62 +29,88 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <label for="last">Tên<span>*</span></label>
-                                <input type="text" name="name" id="name">
+                                <input type="text" name="name" id="name" value="{{ $address->name ?? '' }}">
                             </div>
                             <div class="col-lg-12">
                                 <label for="last">Số điện thoại<span>*</span></label>
-                                <input type="text" name="phone" id="phone">
+                                <input type="text" name="phone" id="phone" value="{{ $address->phone ?? '' }}">
                             </div>
                             <div class="col-lg-4">
                                 <label for="cun">Tỉnh<span>*</span></label>
                                 <select class="custom-select" id="province" name="province">
-                                    <option>Chọn tỉnh</option>
+                                    <option value="">Chọn tỉnh/ thành phố</option>
+                                    @foreach ($provinces as $province)
+                                        <option value="{{ $province['id'] }}"
+                                            @if (!empty($address) && $address->province == $province['id']) selected @endif>
+                                            {{ $province['name'] }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-lg-4">
                                 <label for="street">Quận/ Huyện<span>*</span></label>
                                 <select class="custom-select" id="district" name="district">
-                                    <option>Chọn quận/ huyện</option>
+                                    <option value="">Chọn quận/ huyện</option>
+                                    @if (!empty($address) && !empty($address->district))
+                                        @foreach ($districts as $district)
+                                            <option value="{{ $district['id'] }}"
+                                                @if (!empty($address) && $address->district == $district['id']) selected @endif>
+                                                {{ $district['name'] }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+
                                 </select>
                             </div>
                             <div class="col-lg-4">
                                 <label for="cun-name">Phường/ Xã</label>
                                 <select class="custom-select" id="ward" name="ward">
-                                    <option>Chọn phường/ xã</option>
+                                    <option value="">Chọn phường/ xã</option>
+                                    @if (!empty($address) && !empty($address->ward))
+                                        @foreach ($wards as $ward)
+                                            <option value="{{ $ward['id'] }}"
+                                                @if (!empty($address) && $address->ward == $ward['id']) selected @endif>
+                                                {{ $ward['name'] }}
+                                            </option>
+                                        @endforeach
+                                    @endif
                                 </select>
+                            </div>
+                            <div class="col-lg-12">
+                                <label for="street">Địa chỉ cụ thể<span>*</span></label>
+                                <input type="text" name="address" id="address" value="{{ $address->address ?? '' }}">
+                            </div>
+                            <div class="col-lg-12">
+                                <label for="street">Ghi chú</label>
+                                <textarea name="note" id="note" cols="30" rows="5" class="form-control">{{ $address->note ?? '' }}
+                                </textarea>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-5">
                         <div class="place-order">
-                            <h4>Your Order</h4>
+                            <h4>Đơn hàng của bạn</h4>
                             <div class="order-total">
                                 <ul class="order-table">
-                                    <li>Product <span>Total</span></li>
-                                    <li class="fw-normal">Combination x 1 <span>$60.00</span></li>
-                                    <li class="fw-normal">Combination x 1 <span>$60.00</span></li>
-                                    <li class="fw-normal">Combination x 1 <span>$120.00</span></li>
-                                    <li class="fw-normal">Subtotal <span>$240.00</span></li>
-                                    <li class="total-price">Total <span>$240.00</span></li>
+                                    <li>Tên <span>Tổng tiền</span></li>
+                                    @php
+                                        $total = 0;
+                                    @endphp
+                                    @foreach ($carts as $cart)
+                                        <li class="fw-normal">
+                                            {{ $cart->product->name }} ({{$cart->size->name}}) x {{ $cart->quantity }}
+                                            <span>{{ number_format($cart->product->price * $cart->quantity) }}đ
+                                            </span>
+                                        </li>
+                                        @php
+                                            $total += $cart->product->price * $cart->quantity;
+                                        @endphp
+                                    @endforeach
+
+                                    <li class="total-price">Tổng tiền <span>{{ number_format($total) }}đ</span></li>
                                 </ul>
-                                <div class="payment-check">
-                                    <div class="pc-item">
-                                        <label for="pc-check">
-                                            Cheque Payment
-                                            <input type="checkbox" id="pc-check">
-                                            <span class="checkmark"></span>
-                                        </label>
-                                    </div>
-                                    <div class="pc-item">
-                                        <label for="pc-paypal">
-                                            Paypal
-                                            <input type="checkbox" id="pc-paypal">
-                                            <span class="checkmark"></span>
-                                        </label>
-                                    </div>
-                                </div>
                                 <div class="order-btn">
-                                    <button type="submit" class="site-btn place-btn">Place Order</button>
+                                    <button type="button" onclick="submitOrder(event)" class="site-btn place-btn">Đặt hàng</button>
                                 </div>
                             </div>
                         </div>
@@ -92,58 +119,77 @@
             </form>
         </div>
     </section>
+
 @endsection
 
 @section('extra-scripts')
     <script>
-        $(document).ready(function() {
+        function submitOrder(e) {
+            e.preventDefault();
+            var name = $('#name').val();
+            var phone = $('#phone').val();
+            var province = $('#province').val();
+            var district = $('#district').val();
+            var ward = $('#ward').val();
+            var address = $('#address').val();
+
+            // if (name == '' || phone == '' || province == '' || district == '' || ward == '' || address == '') {
+            //     return Swal.fire({
+            //         icon: 'error',
+            //         title: 'Oops...',
+            //         text: 'Vui lòng nhập đầy đủ thông tin!',
+            //     });
+
+            // }
+
+            $("#checkout-form").submit();
+
+        }
+
+        $('#province').change(function() {
+            var province = $(this).val();
             $.ajax({
-                url: `{{ route('api.provinces') }}`,
+                url: `{{ route('api.districts', ['provinceId' => 'provinceId']) }}`.replace(
+                    'provinceId', province),
                 method: 'GET',
-                success: async function(response) {
-                    await response.forEach(function(province, key) {
-                        $('#province').append(
-                            `<option value="${province.id}">${province.name}</option>`);
+                success: function(response) {
+                    $('#district').empty();
+                    $('#district').append(`<option value="">Chọn quận/ huyện</option>`);
+
+                    let districtId = '{{ $address->district ?? '' }}';
+
+                    response.forEach(function(district, key) {
+                        $('#district').append(
+                            `<option value="${district.id}"
+                            ${districtId == district.id ? 'selected' : ''}>${district.name}</option>`
+                        );
                     });
                 }
             });
+        });
 
-            $('#province').change(function() {
-                var province = $(this).val();
-                $.ajax({
-                    url: `{{ route('api.districts', ['provinceId' => 'provinceId']) }}`.replace(
-                        'provinceId', province),
-                    method: 'GET',
-                    success: function(response) {
-                        $('#district').empty();
-                        $('#district').append(`<option value="">Chọn quận/ huyện</option>`);
-                        response.forEach(function(district, key) {
-                            $('#district').append(
-                                `<option value="${district.id}">${district.name}</option>`
-                            );
-                        });
-                    }
-                });
-            });
+        $('#district').change(function() {
+            var district = $(this).val();
+            $.ajax({
+                url: `{{ route('api.wards', ['districtId' => 'districtId']) }}`.replace(
+                    'districtId', district),
+                method: 'GET',
+                success: function(response) {
+                    $('#ward').empty();
+                    $('#ward').append(`<option value="">Chọn phường/ xã</option>`);
 
-            $('#district').change(function() {
-                var province = $('#province').val();
-                var district = $(this).val();
-                $.ajax({
-                    url: `{{ route('api.wards', ['districtId' => 'districtId']) }}`.replace(
-                        'districtId', district),
-                    method: 'GET',
-                    success: function(response) {
-                        $('#ward').empty();
-                        $('#ward').append(`<option value="">Chọn phường/ xã</option>`);
-                        response.forEach(function(ward, key) {
-                            $('#ward').append(
-                                `<option value="${ward.id}">${ward.name}</option>`
-                            );
-                        });
-                    }
-                });
+                    let wardId = '{{ $address->ward ?? '' }}';
+
+                    response.forEach(function(ward, key) {
+                        $('#ward').append(
+                            `<option value="${ward.id}"
+                            ${wardId == ward.id ? 'selected' : ''}
+                            >${ward.name}</option>`
+                        );
+                    });
+                }
             });
         });
+        // });
     </script>
 @endsection

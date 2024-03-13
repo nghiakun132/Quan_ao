@@ -22,8 +22,9 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        // $this->call(AdminSedder::class);
-
+        $this->call(AdminSedder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(SizeSeeder::class);
         // Cart::create([
         //     'user_id' => 1,
         //     'product_id' => 1,

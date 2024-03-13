@@ -4,8 +4,19 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\District;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderDetail;
+use App\Models\ProductSize;
+use App\Models\Province;
+use App\Models\User;
+use App\Models\Ward;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
@@ -21,13 +32,37 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
+
+
         $data = $request->all();
 
         if (!auth()->user()) {
+            // return response()->json([
+            //     'status' => 'error',
+            //     'message' => 'Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng',
+            // ], 400);
+
+
+            //use Cookie
+
+            $cart = json_decode($request->cookie('cart'), true);
+
+            if (empty($cart)) {
+                $cart = [];
+            }
+
+            $key = $request->productId . '-' . $request->size;
+
+            if (array_key_exists($key, $cart)) {
+                $cart[$key] += $request->quantity;
+            } else {
+                $cart[$key] = $request->quantity;
+            }
+
             return response()->json([
-                'status' => 'error',
-                'message' => 'Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng',
-            ], 400);
+                'status' => 'success',
+                'message' => 'Thêm sản phẩm vào giỏ hàng thành công',
+            ])->cookie('cart', json_encode($cart), 60 * 24 * 30);
         }
 
         $cart = Cart::where(
@@ -106,6 +141,134 @@ class CartController extends Controller
             ->with(['product', 'size'])
             ->get();
 
-        return view('user.cart.checkout', compact('carts'));
+        $address = User::where('id', Auth::id())->first()->getDefaultAddress();
+
+        if (Cache::has('provinces')) {
+            $provinces = Cache::get('provinces');
+        } else {
+            $provinces = Province::pluck('name', 'id')->toArray();
+
+            $provinces = collect($provinces)->map(function ($value, $key) {
+                return [
+                    'id' => $key,
+                    'name' => $value,
+                ];
+            })->toArray();
+
+            Cache::forever('provinces', $provinces);
+        }
+
+        if (Cache::has('districts')) {
+            $districts = Cache::get('districts_' . $address->province);
+        } else {
+            $districts = District::where('province_id', $address->province)->pluck('name', 'id')->toArray();
+
+            $districts = collect($districts)->map(function ($value, $key) {
+                return [
+                    'id' => $key,
+                    'name' => $value,
+                ];
+            })->toArray();
+
+            Cache::forever('districts_' . $address->province, $districts);
+        }
+
+        if (Cache::has('wards_' . $address->district)) {
+            $wards = Cache::get('wards_' . $address->district);
+        } else {
+            $wards = Ward::where('district_id', $address->district)->pluck('name', 'id')->toArray();
+
+            $wards = collect($wards)->map(function ($value, $key) {
+                return [
+                    'id' => $key,
+                    'name' => $value,
+                ];
+            })->toArray();
+
+            Cache::forever('wards_' . $address->district, $wards);
+        }
+
+        $data = [
+            'carts' => $carts,
+            'address' => $address,
+            'provinces' => $provinces,
+            'districts' => $districts,
+            'wards' => $wards,
+        ];
+
+        return view('user.cart.checkout', $data);
+    }
+
+    public function checkoutPost(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+
+            $carts = Cart::where('user_id', auth()->user()->id)
+                ->with(['product', 'size'])
+                ->get();
+
+            $orderDetail = [];
+
+            $total = 0;
+
+            foreach ($carts as $cart) {
+                $total += $cart->quantity * $cart->product->price;
+                $orderDetail[] = [
+                    'product_id' => $cart->product_id,
+                    'quantity' => $cart->quantity,
+                    'price' => $cart->product->price,
+                    'size_id' => $cart->size_id,
+                ];
+
+                $productSize = ProductSize::where('product_id', $cart->product_id)
+                    ->where('size_id', $cart->size_id)
+                    ->first();
+
+                if ($productSize->quantity < $cart->quantity) {
+                    return redirect()->back()->with('error', 'Sản phẩm ' . $cart->product->name . ' - ' . $cart->size->name . ' không đủ số lượng');
+                }
+
+                $productSize->quantity -= $cart->quantity;
+                $productSize->save();
+            }
+
+            $order = new Order();
+            $order->user_id = auth()->id();
+            $order->shipping_fee = 0;
+            $order->total = $total;
+            $order->status = 0;
+            $order->discount = 0;
+            $order->note = $request->note;
+            $order->save();
+
+            $orderDetail = Arr::map($orderDetail, function ($item) use ($order) {
+                $item['order_id'] = $order->id;
+                return $item;
+            });
+
+            OrderDetail::insert($orderDetail);
+
+            OrderAddress::create([
+                'order_id' => $order->id,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'province' => $request->province,
+                'district' => $request->district,
+                'ward' => $request->ward,
+            ]);
+
+            Cart::where('user_id', auth()->user()->id)->delete();
+
+            DB::commit();
+
+            return redirect()->route('home')->with('success', 'Đặt hàng thành công');
+        } catch (Exception $ex) {
+            report($ex);
+            DB::rollBack();
+
+            return redirect()->back()->with('error', 'Có lỗi xảy ra, vui lòng thử lại sau');
+        }
     }
 }

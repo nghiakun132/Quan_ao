@@ -43,4 +43,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    public function getDefaultAddress()
+    {
+        return $this->addresses()->where('is_default', 1)
+            ->with(['province', 'district', 'ward'])
+            ->first();
+    }
 }

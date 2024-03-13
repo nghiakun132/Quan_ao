@@ -4,7 +4,7 @@
             <div class="col-lg-3">
                 <div class="footer-left">
                     <div class="footer-logo">
-                        <a href="#"><img src="{{asset('user/img/footer-logo.png')}}" alt=""></a>
+                        <a href="#"><img src="{{ asset('user/img/footer-logo.png') }}" alt=""></a>
                     </div>
                     <ul>
                         <li>Phone: +65 11.188.888</li>
@@ -32,6 +32,12 @@
                     <ul>
                         <li><a href="#">Tài khoản của tôi</a></li>
                         <li><a href="#">Giỏ hàng</a></li>
+                        <li><a href="#">Danh sách yêu thích</a></li>
+                        <li>
+                            <a href="#">
+                                Đơn hàng của tôi
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -52,10 +58,10 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="copyright-text">
-                        Vĩnh Tường © {{date('Y')}}
+                        Vĩnh Tường © {{ date('Y') }}
                     </div>
                     <div class="payment-pic">
-                        <img src="{{asset('user/img/payment-method.png')}}" alt="">
+                        <img src="{{ asset('user/img/payment-method.png') }}" alt="">
                     </div>
                 </div>
             </div>

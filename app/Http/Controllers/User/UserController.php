@@ -44,7 +44,7 @@ class UserController extends Controller
 
             return redirect()->route('home');
         } else {
-            return redirect()->route('login');
+            return redirect()->route('user.login')->with('error', 'Email hoặc mật khẩu không đúng');
         }
     }
 

@@ -25,7 +25,7 @@
         <div class="container">
             <div class="row">
                 <input type="hidden" id="product_id" value="{{ $product->id }}">
-                <input type="hidden" id="user_id" value="{{auth()->id()}}">
+                <input type="hidden" id="user_id" value="{{ auth()->id() }}">
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-6">
@@ -63,7 +63,8 @@
                                 </div>
                                 <div class="pd-desc">
                                     <p>{!! $product->description !!}</p>
-                                    <h4>{{ number_format($product->price) }} VNĐ
+                                    <h4><span style="text-decoration: underline">Giá bán:</span>
+                                        {{ number_format($product->price) }} VNĐ
                                         @if ($product->sale != 0)
                                             <span>
                                                 {{ number_format($product->price + ($product->price * $product->sale) / 100) }}
@@ -72,8 +73,9 @@
                                         @endif
                                     </h4>
                                 </div>
-                                <div class="pd-size-choose">
+                                {{-- <div class="pd-size-choose">
                                     @foreach ($product->size as $size)
+
                                         <div class="sc-item">
                                             <input type="radio" id="{{$size->slug}}-size" name="size" value="{{ $size->id }}"
                                                 @if ($size->pivot->quantity == 0) disabled @endif>
@@ -82,16 +84,31 @@
                                                 {{ $size->name }}</label>
                                         </div>
                                     @endforeach
+                                </div> --}}
+                                <div class="mb-2">
+                                    <label for="size">Size</label>
+                                    <select name="size" id="size" class="form-control">
+                                        <option value="">Chọn size</option>
+                                        @foreach ($product->size as $size)
+                                            <option value="{{ $size->id }}"
+                                                @if ($size->pivot->quantity == 0) disabled @endif>
+                                                {{ $size->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
+
                                 <div class="quantity">
                                     <div class="pro-qty">
                                         <input type="text" value="1" name="quantity" id="quantity">
                                     </div>
-                                    <a id="add-to-cart-btn" onclick="addToCart()" class=" primary-btn pd-cart">Add To Cart</a>
+                                    <a id="add-to-cart-btn" onclick="addToCart()" class=" primary-btn pd-cart">Add To
+                                        Cart</a>
                                 </div>
                                 <ul class="pd-tags">
                                     <li><span>Danh mục</span>:
-                                        <a href="{{ route('user.category.index', $product->category->slug) }}" class="text-capitalize" style="color: red">
+                                        <a href="{{ route('user.category.index', $product->category->slug) }}"
+                                            class="text-capitalize" style="color: red">
                                             {{ $product->category->name }}
                                         </a>
                                     </li>
@@ -111,11 +128,11 @@
                                         Thông tin chi tiết
                                     </a>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <a data-toggle="tab" href="#tab-3" role="tab">
                                         Đánh giá (2)
                                     </a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                         <div class="tab-item-content">
@@ -171,7 +188,7 @@
                                                             @foreach ($product->size as $size)
                                                                 <li class="list-group-item">
                                                                     <span>{{ $size->name }}</span>:
-                                                                    <span>{{ $size->pivot->quantity != 0 ?$size->pivot->quantity : 'Hết hang' }}</span>
+                                                                    <span>{{ $size->pivot->quantity != 0 ? $size->pivot->quantity : 'Hết hàng' }}</span>
                                                                 </li>
                                                             @endforeach
 
@@ -182,7 +199,7 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="tab-3" role="tabpanel">
+                                {{-- <div class="tab-pane fade" id="tab-3" role="tabpanel">
                                     <div class="customer-review-option">
                                         <h4>2 Comments</h4>
                                         <div class="comment-option">
@@ -247,7 +264,7 @@
                                             </form>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

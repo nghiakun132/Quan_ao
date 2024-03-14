@@ -97,11 +97,13 @@ class UserController extends Controller
 
     public function profile(Request $request)
     {
-        return view('user.profile');
+        return view('user.profile.index');
     }
 
     public function getWhiteList(Request $request)
     {
         return view('user.white_list');
     }
+
+    public function update(Request $re){}
 }

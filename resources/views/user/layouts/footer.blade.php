@@ -30,11 +30,11 @@
                 <div class="footer-widget">
                     <h5>Tài khoản của tôi</h5>
                     <ul>
-                        <li><a href="#">Tài khoản của tôi</a></li>
-                        <li><a href="#">Giỏ hàng</a></li>
+                        <li><a href="{{route('user.profile')}}">Tài khoản của tôi</a></li>
+                        <li><a href="{{route('user.cart')}}">Giỏ hàng</a></li>
                         <li><a href="#">Danh sách yêu thích</a></li>
                         <li>
-                            <a href="#">
+                            <a href="{{route('user.order')}}">
                                 Đơn hàng của tôi
                             </a>
                         </li>

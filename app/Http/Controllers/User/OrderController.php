@@ -20,7 +20,9 @@ class OrderController extends Controller
 
     public function show($code)
     {
-        $order = Order::where('code', $code)->first();
+        $order = Order::where('code', $code)
+            ->with(['details.product', 'details.size'])
+            ->first();
 
         return view('user.order.detail', compact('order'));
     }

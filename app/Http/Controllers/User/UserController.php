@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -36,15 +37,27 @@ class UserController extends Controller
         $user = $request->only('email', 'password');
 
         if (Auth::attempt($user)) {
+
+            if (Auth::user()->status == 1) {
+                Auth::logout();
+                return redirect()->route('user.login')->with(
+                    'error',
+                    'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ admin để được hỗ trợ'
+                )->withInput();
+            }
+
+
             if ($request->remember == 'on') {
                 Cookie::queue('email', $request->email, 60 * 24 * 30);
                 Cookie::queue('password', $request->password, 60 * 24 * 30);
                 Cookie::queue('remember', 'on', 60 * 24 * 30);
             }
 
+
+
             return redirect()->route('home');
         } else {
-            return redirect()->route('user.login')->with('error', 'Email hoặc mật khẩu không đúng');
+            return redirect()->route('user.login')->with('error', 'Email hoặc mật khẩu không đúng')->withInput();
         }
     }
 
@@ -54,7 +67,7 @@ class UserController extends Controller
 
         return redirect()->route('home')->withCookie(Cookie::forget('email'))
             ->withCookie(Cookie::forget('password'))
-            ->withCookie(Cookie::forget('remember'))->with('success', 'Đăng xuất thành công');
+            ->withCookie(Cookie::forget('remember'));
     }
 
     public function register(Request $request)
@@ -97,7 +110,9 @@ class UserController extends Controller
 
     public function profile(Request $request)
     {
-        return view('user.profile.index');
+        $user = Auth::user();
+
+        return view('user.profile.index', compact('user'));
     }
 
     public function getWhiteList(Request $request)
@@ -105,5 +120,66 @@ class UserController extends Controller
         return view('user.white_list');
     }
 
-    public function update(Request $re){}
+    public function update(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:50',
+            'phone' => 'required',
+            'email' => 'required|email',
+            'birthday' => 'required|date'
+        ], [
+            'name.required' => 'Tên không được để trống',
+            'name.max' => 'Tên không quá 50 ký tự',
+            'phone.required' => 'Số điện thoại không được để trống',
+            'email.required' => 'Email không được để trống',
+            'email.email' => 'Email không đúng định dạng',
+            'birthday.required' => 'Ngày sinh không được để trống',
+            'birthday.date' => 'Ngày sinh không đúng định dạng'
+        ]);
+
+        $user = User::find(Auth::id());
+        $user->name = $request->name;
+        $user->phone = $request->phone;
+        $user->email = $request->email;
+        $user->birthday = $request->birthday;
+        $user->save();
+
+        return redirect()->route('user.profile')->with('success', 'Cập nhật thông tin thành công');
+    }
+
+    public function changePassword(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'password' => 'required',
+            'new_password' => 'required|min:6|max:20',
+            'confirm_password' => 'required|same:new_password'
+        ], [
+            'password.required' => 'Mật khẩu cũ không được để trống',
+            'new_password.required' => 'Mật khẩu mới không được để trống',
+            'new_password.min' => 'Mật khẩu mới ít nhất 6 ký tự',
+            'new_password.max' => 'Mật khẩu mới không quá 20 ký tự',
+            'confirm_password.required' => 'Mật khẩu xác nhận không được để trống',
+            'confirm_password.same' => 'Mật khẩu xác nhận không khớp'
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json(['errors' => $validated->errors(), 'status' => 'error'], 400);
+        }
+
+        $user = User::find(Auth::id());
+
+        if (Hash::check($request->password, $user->password)) {
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
+            return response()->json(['message' => 'Cập nhật mật khẩu thành công', 'status' => 'success'], 200);
+        }
+
+        return response()->json([
+            'errors' => [
+                'password' => ['Mật khẩu cũ không đúng']
+            ],
+            'status' => 'error'
+        ], 400);
+    }
 }

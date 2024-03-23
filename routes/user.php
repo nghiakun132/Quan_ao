@@ -19,7 +19,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get("yeu-thich", [UserController::class, "getWhiteList"])->name("user.white_list");
     Route::get("dang-xuat", [UserController::class, "logout"])->name("user.logout");
     Route::get("thong-tin-ca-nhan", [UserController::class, "profile"])->name("user.profile");
-    Route::post("thong-tin-ca-nhan", [UserController::class, "update"])->name("user.profile.post");
+    Route::post("thong-tin-ca-nhan", [UserController::class, "update"])->name("user.profile.update");
+
+    Route::post('/doi-mat-khau', [UserController::class, 'changePassword'])->name('user.change_password');
 
     Route::get('gio-hang', [CartController::class, 'index'])->name('user.cart');
     Route::post('/gio-hang', [CartController::class, 'update'])->name('user.cart.update');

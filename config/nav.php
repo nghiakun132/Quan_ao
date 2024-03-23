@@ -8,7 +8,7 @@ return [
     ],
     [
         'name' => 'Người dùng',
-        'route' => 'admin.category.index',
+        'route' => 'admin.user.index',
         'icon' => 'fas fa-fw fa-users',
     ],
     [
@@ -38,7 +38,7 @@ return [
     ],
     [
         'name' => 'Đơn hàng',
-        'route' => 'admin.category.index',
+        'route' => 'admin.order.index',
         'icon' => 'fas fa-fw fa-shopping-cart',
     ],
     [

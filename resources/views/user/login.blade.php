@@ -27,7 +27,8 @@
                             @csrf
                             <div class="group-input">
                                 <label for="username">Email*</label>
-                                <input type="text" name="email" value="{{!empty($email) ? $email : old('email')}}" id="username" required>
+                                <input type="text" name="email" value="{{ !empty($email) ? $email : old('email') }}"
+                                    id="username" required>
 
                                 @if ($errors->has('email'))
                                     <span class="text-danger">{{ $errors->first('email') }}</span>
@@ -35,7 +36,8 @@
                             </div>
                             <div class="group-input">
                                 <label for="pass">Mật khẩu*</label>
-                                <input type="password" id="pass" name="password" value="{{!empty($password) ? $password : old('password')}}" required>
+                                <input type="password" id="pass" name="password"
+                                    value="{{ !empty($password) ? $password : old('password') }}" required>
 
                                 @if ($errors->has('password'))
                                     <span class="text-danger">{{ $errors->first('password') }}</span>

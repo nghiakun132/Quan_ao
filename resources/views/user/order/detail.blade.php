@@ -59,7 +59,7 @@
 
                                 <tr>
                                     <td colspan="4" class="text-right">Tổng tiền</td>
-                                    <td colspan="2">{{ number_format($order->total) }} đ</td>
+                                    <td colspan="2" class="text-right">{{ number_format($order->total) }} đ</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -18,7 +18,9 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-8 order-2 order-lg-1 produts-sidebar-filter">
                     <div class="filter-widget">
-                        <h4 class="fw-title">Brand</h4>
+                        <h4 class="fw-title">
+                            Nhãn hiệu
+                        </h4>
                         <div class="fw-brand-check">
                             @foreach ($brands as $brand)
                                 <div class="bc-item">
@@ -33,7 +35,9 @@
                         </div>
                     </div>
                     <div class="filter-widget">
-                        <h4 class="fw-title">Price</h4>
+                        <h4 class="fw-title">
+                            Giá
+                        </h4>
                         <div class="filter-range-wrap">
                             <div class="range-slider">
                                 <div class="price-input">
@@ -49,8 +53,12 @@
                                 <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
                             </div>
                         </div>
-                        <a onclick="onFilter()" class="filter-btn">Filter</a>
-                        <a href="{{ route('user.category.index', $category->slug) }}" class="reset-btn">Reset</a>
+                        <a onclick="onFilter()" class="filter-btn">
+                            Lọc
+                        </a>
+                        <a href="{{ route('user.category.index', $category->slug) }}" class="reset-btn">
+                            Reset
+                        </a>
                     </div>
 
                     <div class="filter-widget">

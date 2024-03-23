@@ -22,6 +22,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'birthday',
+        'status'
     ];
 
     /**
@@ -54,5 +57,10 @@ class User extends Authenticatable
         return $this->addresses()->where('is_default', 1)
             ->with(['province', 'district', 'ward'])
             ->first();
+    }
+
+    public function getBirthdayAttribute($value)
+    {
+        return date('Y-m-d', strtotime($value));
     }
 }

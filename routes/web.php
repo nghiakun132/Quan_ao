@@ -3,9 +3,11 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +36,8 @@ Route::prefix('/admin')->group(function () {
 
     Route::group(['middleware' => 'auth:admins'], function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+
+        Route::get('/dang-xuat', [AdminController::class, 'logout'])->name('admin.logout');
 
         Route::group(['prefix' => 'danh-muc'], function () {
             Route::get('/', [CategoryController::class, 'index'])->name('admin.category.index');
@@ -66,6 +70,20 @@ Route::prefix('/admin')->group(function () {
             Route::get(SUA, [SizeController::class, 'edit'])->name('admin.size.edit');
             Route::post(CAP_NHAT, [SizeController::class, 'update'])->name('admin.size.update');
             Route::get(XOA, [SizeController::class, 'destroy'])->name('admin.size.delete');
+        });
+
+        //order
+        Route::group(['prefix' => 'don-hang'], function () {
+            Route::get('/', [OrderController::class, 'index'])->name('admin.order.index');
+            Route::get('/{id}', [OrderController::class, 'show'])->name('admin.order.show');
+
+            Route::post('update/{id}', [OrderController::class, 'updateStatus'])->name('admin.order.updateStatus');
+        });
+
+        Route::group(['prefix' => 'khach-hang'], function () {
+            Route::get('/', [UserController::class, 'index'])->name('admin.user.index');
+            Route::get('/thay-doi-trang-thai/{id}', [UserController::class, 'changeStatus'])
+                ->name('admin.user.changeStatus');
         });
     });
 

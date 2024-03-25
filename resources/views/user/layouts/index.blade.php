@@ -88,7 +88,7 @@
                     <div class="col-lg-3 text-right col-md-3">
                         <ul class="nav-right">
                             <li class="heart-icon">
-                                <a href="{{route('user.order')}}">
+                                <a href="{{ route('user.order') }}">
                                     {{-- order --}}
                                     <i class="icon_bag_alt"></i>
                                 </a>
@@ -124,8 +124,15 @@
                                                         </td>
                                                         <td class="si-text">
                                                             <div class="product-selected">
-                                                                <p>{{ number_format($cart->product->price) }} x
-                                                                    {{ $cart->quantity }}</p>
+                                                                <p>
+                                                                    @if ($cart->product->sale > 0)
+                                                                        {{ number_format(($cart->product->price * (100 - $cart->product->sale)) / 100) }}
+                                                                    @else
+                                                                        {{ number_format($cart->product->price) }}
+                                                                    @endif
+                                                                    x
+                                                                    {{ $cart->quantity }}
+                                                                </p>
                                                                 <h6>
                                                                     {{ $cart->product->name }} -
                                                                     {{ $cart->size->name }}
@@ -137,7 +144,13 @@
                                                         </td>
                                                     </tr>
                                                     @php
-                                                        $total += $cart->product->price * $cart->quantity;
+                                                        $price =
+                                                            $cart->product->sale > 0
+                                                                ? ($cart->product->price *
+                                                                        (100 - $cart->product->sale)) /
+                                                                    100
+                                                                : $cart->product->price;
+                                                        $total += $price * $cart->quantity;
                                                     @endphp
                                                 @endforeach
                                             </tbody>

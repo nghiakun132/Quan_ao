@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb-text product-more">
-                        <a href="{{route('home')}}"><i class="fa fa-home"></i> Trang chủ</a>
+                        <a href="{{ route('home') }}"><i class="fa fa-home"></i> Trang chủ</a>
                         <a href="{{ route('user.category.index', $product->category->slug) }}">
                             {{ $product->category->name }}
                         </a>
@@ -64,11 +64,11 @@
                                 <div class="pd-desc">
                                     <p>{!! $product->description !!}</p>
                                     <h4><span style="text-decoration: underline">Giá bán:</span>
-                                        {{ number_format($product->price) }} VNĐ
+                                        {{ number_format(($product->price * (100 - $product->sale)) / 100) }}
+                                        VNĐ
                                         @if ($product->sale != 0)
                                             <span>
-                                                {{ number_format($product->price + ($product->price * $product->sale) / 100) }}
-                                                VNĐ
+                                                {{ number_format($product->price) }} VNĐ
                                             </span>
                                         @endif
                                     </h4>
@@ -168,10 +168,12 @@
                                                 <td class="p-catagory">Giá</td>
                                                 <td>
                                                     <div class="p-price">
-                                                        {{ number_format($product->price) }} VNĐ
+                                                        {{ number_format(($product->price * (100 - $product->sale)) / 100) }}VNĐ
+
+
                                                         @if ($product->sale != 0)
-                                                            <code>
-                                                                {{ number_format($product->price + ($product->price * $product->sale) / 100) }}
+                                                            <code style="text-decoration: line-through">
+                                                                {{ number_format($product->price) }}
                                                                 VNĐ
                                                             </code>
                                                         @endif

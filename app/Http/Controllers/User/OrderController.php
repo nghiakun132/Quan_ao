@@ -21,20 +21,33 @@ class OrderController extends Controller
     public function show($code)
     {
         $order = Order::where('code', $code)
-            ->with(['details.product', 'details.size'])
+            ->with(['details.product', 'details.size', 'cancel'])
             ->first();
 
         return view('user.order.detail', compact('order'));
     }
 
-    public function cancel($code)
+    public function cancel(Request $request)
     {
         DB::beginTransaction();
         try {
 
+            $code = $request->code;
+
+            if (!$code) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Mã đơn hàng không tồn tại'
+                ]);
+            }
+
             $order = Order::where('code', $code)->first();
             $order->status = Order::CANCEL;
             $order->save();
+
+            $order->cancel()->create([
+                'reason' => $request->reason
+            ]);
 
             foreach ($order->details as $detail) {
                 ProductSize::where('product_id', $detail->product_id)
@@ -43,10 +56,20 @@ class OrderController extends Controller
             }
 
             DB::commit();
-            return redirect()->back()->with('success', 'Hủy đơn hàng thành công');
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Hủy đơn hàng thành công'
+            ]);
+
         } catch (Exception $ex) {
+            report($ex);
             DB::rollBack();
-            return redirect()->back()->with('error', 'Hủy đơn hàng thất bại');
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Hủy đơn hàng thất bại'
+            ]);
         }
     }
 }

@@ -37,7 +37,6 @@ class UserController extends Controller
         $user = $request->only('email', 'password');
 
         if (Auth::attempt($user)) {
-
             if (Auth::user()->status == 1) {
                 Auth::logout();
                 return redirect()->route('user.login')->with(
@@ -46,14 +45,15 @@ class UserController extends Controller
                 )->withInput();
             }
 
-
             if ($request->remember == 'on') {
                 Cookie::queue('email', $request->email, 60 * 24 * 30);
                 Cookie::queue('password', $request->password, 60 * 24 * 30);
                 Cookie::queue('remember', 'on', 60 * 24 * 30);
             }
 
-
+            if (!empty ($request->redirect)) {
+                return redirect($request->redirect);
+            }
 
             return redirect()->route('home');
         } else {

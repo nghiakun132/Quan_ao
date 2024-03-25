@@ -23,7 +23,8 @@
                 <div class="col-lg-6 offset-lg-3">
                     <div class="login-form">
                         <h2>Đăng nhập</h2>
-                        <form action="{{ route('user.login.post') }}" method="POST">
+                        <form action="{{ route('user.login.post', ['redirect' => request()->input('redirect')]) }}"
+                            method="POST">
                             @csrf
                             <div class="group-input">
                                 <label for="username">Email*</label>

@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb-text product-more">
-                        <a href="{{route('home')}}"><i class="fa fa-home"></i> Trang chủ</a>
+                        <a href="{{ route('home') }}"><i class="fa fa-home"></i> Trang chủ</a>
                         <span>Giỏ hàng</span>
                     </div>
                 </div>
@@ -39,6 +39,9 @@
                                     $total = 0;
                                 @endphp
                                 @forelse ($carts as $cart)
+                                    <?php
+                                    $price = $cart->product->sale > 0 ? $cart->product->price - ($cart->product->price * $cart->product->sale) / 100 : $cart->product->price;
+                                    ?>
                                     <tr>
                                         <td class="cart-pic first-row">
                                             <img src="{{ $cart->product->image }}" height="100px" width="100px"
@@ -49,17 +52,19 @@
                                                 <h5>{{ $cart->product->name }} - {{ $cart->size->name }}</h5>
                                             </a>
                                         </td>
-                                        <td class="p-price first-row">{{ number_format($cart->product->price) }}</td>
+                                        <td class="p-price first-row">
+                                            {{ number_format($price) }}
+                                        </td>
                                         <td class="qua-col first-row">
                                             <div class="quantity">
                                                 <div class="pro-qty">
-                                                    <input type="text" value="{{ $cart->quantity }}" class="quantity-input"
-                                                        data-id="{{ $cart->id }}">
+                                                    <input type="text" value="{{ $cart->quantity }}"
+                                                        class="quantity-input" data-id="{{ $cart->id }}">
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="total-price first-row">
-                                            {{ number_format($cart->product->price * $cart->quantity) }}
+                                            {{ number_format($price * $cart->quantity) }}
                                         </td>
                                         <td class="close-td first-row">
                                             <a href="{{ route('user.cart.remove', $cart->id) }}" class="btn-remove"><i
@@ -68,7 +73,7 @@
                                     </tr>
 
                                     @php
-                                        $total += $cart->product->price * $cart->quantity;
+                                        $total += $price * $cart->quantity;
                                     @endphp
                                 @empty
                                     <tr>
@@ -105,7 +110,7 @@
                                     <li class="subtotal">Tạm tính <span>{{ number_format($total) }}</span></li>
                                     <li class="cart-total">Tổng tiền <span>{{ number_format($total) }}</span></li>
                                 </ul>
-                                <a href="{{route('user.cart.checkout')}}" class="proceed-btn">Thanh toán</a>
+                                <a href="{{ route('user.cart.checkout') }}" class="proceed-btn">Thanh toán</a>
                             </div>
                         </div>
                     </div>
@@ -117,43 +122,43 @@
 @endsection
 
 @section('extra-scripts')
-<script>
-    function updateCart() {
-        let quantities = $('.quantity-input');
-        let cart = [];
-        $.each(quantities, function (index, quantity) {
-            cart.push({
-                id: $(this).data('id'),
-                quantity: $(this).val()
+    <script>
+        function updateCart() {
+            let quantities = $('.quantity-input');
+            let cart = [];
+            $.each(quantities, function(index, quantity) {
+                cart.push({
+                    id: $(this).data('id'),
+                    quantity: $(this).val()
+                });
             });
-        });
 
-        $.ajax({
-            url: "{{ route('user.cart.update') }}",
-            method: "POST",
-            data: {
-                cart: cart,
-                _token: "{{ csrf_token() }}"
-            },
-            success: function (response) {
-                if (response.status === 'success') {
+            $.ajax({
+                url: "{{ route('user.cart.update') }}",
+                method: "POST",
+                data: {
+                    cart: cart,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Cập nhật giỏ hàng thành công!',
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    }
+                },
+                error: function(response) {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Thành công',
-                        text: 'Cập nhật giỏ hàng thành công!',
-                    }).then(() => {
-                        window.location.reload();
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.responseJSON.message,
                     });
                 }
-            },
-            error: function (response) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: response.responseJSON.message,
-                });
-            }
-        });
-    }
-</script>
+            });
+        }
+    </script>
 @endsection

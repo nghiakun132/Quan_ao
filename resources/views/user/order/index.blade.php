@@ -65,7 +65,7 @@
                                                 </a>
 
                                                 @if ($order->status == 0)
-                                                    <a href="{{ route('user.order.cancel', $order->code) }}">
+                                                    <a onclick="cancelOrder('{{ $order->code }}')">
                                                         <span class="badge badge-danger">Hủy đơn hàng</span>
                                                     </a>
                                                 @endif
@@ -84,4 +84,122 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('extra-scripts')
+
+    <script>
+        async function cancelOrder(code) {
+            const options = {
+                '1': 'Không còn nhu cầu mua hàng',
+                '2': 'Không thích sản phẩm',
+                '3': 'Khủng bố',
+                '4': 'Không thể giao hàng',
+                '5': 'Khác'
+            }
+
+            const {
+                value: reason
+            } = await Swal.fire({
+                'input': 'select',
+                'inputLabel': 'Lý do hủy đơn hàng',
+                'inputOptions': options,
+                'inputPlaceholder': 'Chọn lý do hủy đơn hàng',
+                'showCancelButton': true,
+                'confirmButtonText': 'Hủy đơn hàng',
+                'showLoaderOnConfirm': true,
+                'inputValidator': (value) => {
+                    if (!value) {
+                        return 'Vui lòng chọn lý do hủy đơn hàng'
+                    }
+                }
+            })
+
+            if (reason == 5) {
+                const {
+                    value: customReason
+                } = await Swal.fire({
+                    'input': 'textarea',
+                    'inputLabel': 'Lý do hủy đơn hàng',
+                    'inputPlaceholder': 'Nhập lý do hủy đơn hàng',
+                    'showCancelButton': true,
+                    'confirmButtonText': 'Hủy đơn hàng',
+                    'showLoaderOnConfirm': true,
+                    'inputValidator': (value) => {
+                        if (!value) {
+                            return 'Vui lòng nhập lý do hủy đơn hàng'
+                        }
+                    }
+                })
+
+                if (customReason) {
+                    Swal.fire({
+                        'title': 'Đang xử lý',
+                        'text': 'Vui lòng chờ...',
+                        'timer': 1500,
+                        'showConfirmButton': false,
+                    }).then(() => {
+                        callAjax('{{ route('user.order.cancel') }}', 'POST', {
+                            'reason': customReason,
+                            'code': code,
+                        })
+                    })
+
+                }
+            } else if (reason) {
+                Swal.fire({
+                    'title': 'Đang xử lý',
+                    'text': 'Vui lòng chờ...',
+                    'timer': 1500,
+                    'showConfirmButton': false,
+                }).then(() => {
+                    callAjax('{{ route('user.order.cancel') }}', 'POST', {
+                        'reason': options[reason],
+                        'code': code,
+                    })
+                })
+            }
+        }
+
+        async function callAjax(url, method, data) {
+            $.ajax({
+                url: url,
+                method: method,
+                data: data,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        Swal.fire({
+                            'title': 'Hủy đơn hàng thành công',
+                            'icon': 'success',
+                            'showConfirmButton': false,
+                            'timer': 1500
+                        }).then(() => {
+                            window.location.reload()
+                        })
+                    } else {
+                        Swal.fire({
+                            'title': 'Hủy đơn hàng thất bại',
+                            'icon': 'error',
+                            'showConfirmButton': false,
+                            'text': response.message,
+                            'timer': 1500
+                        })
+                    }
+
+
+                },
+                error: function(error) {
+                    Swal.fire({
+                        'title': 'Hủy đơn hàng thất bại',
+                        'icon': 'error',
+                        'showConfirmButton': false,
+                        'timer': 1500
+                    })
+                }
+            })
+        }
+    </script>
 @endsection

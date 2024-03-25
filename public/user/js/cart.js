@@ -16,7 +16,7 @@ function addToCart()
             cancelButtonColor: '#d33',
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = '/dang-nhap';
+                window.location.href = '/dang-nhap?redirect=' + window.location.href;
             }
         })
 

@@ -70,9 +70,9 @@ class Order extends Model
         return self::STATUS_CLASS[$this->status];
     }
 
-    public static function getNextStatus(int $currentStatus)
+    public function cancel()
     {
-        dd($currentStatus);
+        return $this->hasOne(OrderCancel::class, 'order_id', 'id');
     }
 
 }

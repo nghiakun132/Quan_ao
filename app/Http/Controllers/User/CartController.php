@@ -49,7 +49,7 @@ class CartController extends Controller
 
             $cart = json_decode($request->cookie('cart'), true);
 
-            if (empty($cart)) {
+            if (empty ($cart)) {
                 $cart = [];
             }
 
@@ -76,7 +76,7 @@ class CartController extends Controller
             )->where('size_id', $request->size)
             ->first();
 
-        if (empty($cart)) {
+        if (empty ($cart)) {
             $cart = new Cart();
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $request->productId;
@@ -160,7 +160,7 @@ class CartController extends Controller
             Cache::forever('provinces', $provinces);
         }
 
-        if (!empty($address)) {
+        if (!empty ($address)) {
 
 
             if (Cache::has('districts')) {
@@ -219,11 +219,15 @@ class CartController extends Controller
             $total = 0;
 
             foreach ($carts as $cart) {
-                $total += $cart->quantity * $cart->product->price;
+                $price = $cart->product->sale > 0
+                    ? $cart->product->price - ($cart->product->price * $cart->product->sale / 100)
+                    : $cart->product->price;
+
+                $total += $cart->quantity * $price;
                 $orderDetail[] = [
                     'product_id' => $cart->product_id,
                     'quantity' => $cart->quantity,
-                    'price' => $cart->product->price,
+                    'price' => $price,
                     'size_id' => $cart->size_id,
                 ];
 
@@ -232,7 +236,8 @@ class CartController extends Controller
                     ->first();
 
                 if ($productSize->quantity < $cart->quantity) {
-                    return redirect()->back()->with('error', 'Sản phẩm ' . $cart->product->name . ' - ' . $cart->size->name . ' không đủ số lượng');
+                    return redirect()->back()->with('error', 'Sản phẩm '
+                        . $cart->product->name . ' - ' . $cart->size->name . ' không đủ số lượng');
                 }
 
                 $productSize->quantity -= $cart->quantity;
@@ -268,7 +273,6 @@ class CartController extends Controller
 
             if ($request->input('save_address') == 'on') {
                 Address::where('user_id', auth()->id())->update(['is_default' => 0]);
-
                 Address::create([
                     'user_id' => auth()->id(),
                     'name' => $request->name,
@@ -282,7 +286,6 @@ class CartController extends Controller
             }
 
             Cart::where('user_id', auth()->user()->id)->delete();
-
             DB::commit();
 
             return redirect()->route('home')->with('success', 'Đặt hàng thành công');

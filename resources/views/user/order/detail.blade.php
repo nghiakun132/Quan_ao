@@ -21,6 +21,16 @@
     <section class="product-shop spad page-details">
         <div class="container">
             <div class="row">
+                @if ($order->status === \App\Models\Order::CANCEL)
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert">
+                            Đơn hàng đã bị hủy lúc {{ $order->cancel->created_at }}
+                            <div>
+                                <strong>Lý do hủy:</strong> {{ $order->cancel->reason }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 <div class="col-lg-12">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">

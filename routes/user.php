@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/gio-hang/thanh-toan', [CartController::class, 'checkoutPost'])->name('user.cart.checkout.post');
     Route::get('/don-hang', [OrderController::class, 'index'])->name('user.order');
     Route::get('/don-hang/{code}', [OrderController::class, 'show'])->name('user.order.show');
-    Route::get('/huy-don-hang/{code}', [OrderController::class, 'cancel'])->name('user.order.cancel');
+    Route::post('/huy-don-hang', [OrderController::class, 'cancel'])->name('user.order.cancel');
 });
 
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('user.add_to_cart');

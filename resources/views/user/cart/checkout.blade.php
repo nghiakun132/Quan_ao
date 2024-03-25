@@ -102,13 +102,16 @@
                                         $total = 0;
                                     @endphp
                                     @foreach ($carts as $cart)
+                                        <?php
+                                        $price = $cart->product->sale > 0 ? $cart->product->price - ($cart->product->price * $cart->product->sale) / 100 : $cart->product->price;
+                                        ?>
                                         <li class="fw-normal">
                                             {{ $cart->product->name }} ({{ $cart->size->name }}) x {{ $cart->quantity }}
-                                            <span>{{ number_format($cart->product->price * $cart->quantity) }}đ
+                                            <span>{{ number_format($price * $cart->quantity) }}đ
                                             </span>
                                         </li>
                                         @php
-                                            $total += $cart->product->price * $cart->quantity;
+                                            $total += $price * $cart->quantity;
                                         @endphp
                                     @endforeach
 
@@ -135,7 +138,7 @@
 
             let total = '{{ count($carts) }}';
 
-            if(total == 0) {
+            if (total == 0) {
                 return Swal.fire({
                     icon: 'error',
                     title: 'Oops...',

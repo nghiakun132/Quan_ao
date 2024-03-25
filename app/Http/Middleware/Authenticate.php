@@ -15,6 +15,6 @@ class Authenticate extends Middleware
         $routeLogin = str_contains($request->route()->getName(), 'admin')
             ? 'admin.login' : 'user.login';
 
-        return $request->expectsJson() ? null : route($routeLogin);
+        return $request->expectsJson() ? null : route($routeLogin, ['redirect' => $request->fullUrl()]);
     }
 }

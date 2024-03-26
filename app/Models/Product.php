@@ -51,4 +51,13 @@ class Product extends Model
     {
         return asset('products/' . $value);
     }
+
+    public function getSalePriceAttribute()
+    {
+        if ($this->sale > 0) {
+            return $this->price - ($this->price * $this->sale / 100);
+        }
+
+        return $this->price;
+    }
 }

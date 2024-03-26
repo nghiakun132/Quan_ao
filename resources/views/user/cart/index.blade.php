@@ -13,9 +13,6 @@
             </div>
         </div>
     </div>
-    <!-- Breadcrumb Section Begin -->
-
-    <!-- Shopping Cart Section Begin -->
     <section class="shopping-cart spad">
         <div class="container">
             <div class="row">
@@ -29,8 +26,11 @@
                                     <th>Giá</th>
                                     <th>Số lượng</th>
                                     <th>Tổng tiền</th>
-                                    <th><a href="{{ route('user.cart.clean') }}" class="btn-remove">
-                                            <i class="ti-close"></i></th></a>
+                                    @if (count($carts) > 0)
+                                        <th><a onclick="handleRemoveAllCart()" data-href="{{ route('user.cart.clean') }}"
+                                                class="btn-remove" id="remove-all-cart">
+                                                <i class="ti-close"></i></th></a>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,7 +40,7 @@
                                 @endphp
                                 @forelse ($carts as $cart)
                                     <?php
-                                    $price = $cart->product->sale > 0 ? $cart->product->price - ($cart->product->price * $cart->product->sale) / 100 : $cart->product->price;
+                                    $price = $cart->product->sale_price;
                                     ?>
                                     <tr>
                                         <td class="cart-pic first-row">
@@ -95,9 +95,9 @@
                             </div>
                             <div class="discount-coupon">
                                 <h6>Mã giảm giá</h6>
-                                <form action="#" class="coupon-form" method="post">
+                                <form action="{{ route('user.cart.apply_discount') }}" class="coupon-form" method="post">
                                     @csrf
-                                    <input type="text" placeholder="Enter your codes" name="coupon" />
+                                    <input type="text" placeholder="Enter your codes" name="code" />
                                     <button type="submit" class="site-btn coupon-btn">
                                         Áp dụng
                                     </button>
@@ -108,6 +108,25 @@
                             <div class="proceed-checkout">
                                 <ul>
                                     <li class="subtotal">Tạm tính <span>{{ number_format($total) }}</span></li>
+                                    <li class="subtotal">Phí giao hàng <span>Miễn phí</span></li>
+                                    @if (session('discount_value'))
+                                        <li class="subtotal">Giảm giá <span>{{ session('discount_value') }}%</span></li>
+                                        @php
+                                            $total = $total - ($total * session('discount_value')) / 100;
+                                        @endphp
+
+                                        <li class="subtotal">Code giảm giá <span>{{ session('discount') }}</span>
+                                            {{-- button clear code --}}
+
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                onclick="window.location.href='{{ route('user.cart.remove_discount') }}'">
+                                                Xóa
+                                            </button>
+
+                                        </li>
+                                    @endif
+
+
                                     <li class="cart-total">Tổng tiền <span>{{ number_format($total) }}</span></li>
                                 </ul>
                                 <a href="{{ route('user.cart.checkout') }}" class="proceed-btn">Thanh toán</a>
@@ -157,6 +176,24 @@
                         title: 'Oops...',
                         text: response.responseJSON.message,
                     });
+                }
+            });
+        }
+
+        function handleRemoveAllCart() {
+            let url = $('#remove-all-cart').data('href');
+            Swal.fire({
+                title: 'Bạn có chắc chắn muốn xóa giỏ hàng?',
+                text: "Dữ liệu sẽ không thể khôi phục lại!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
                 }
             });
         }

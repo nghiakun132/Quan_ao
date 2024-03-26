@@ -63,4 +63,10 @@ class User extends Authenticatable
     {
         return date('Y-m-d', strtotime($value));
     }
+
+    public function setBirthdayAttribute($value)
+    {
+
+        $this->attributes['birthday'] = date('Y-m-d H:i:s', strtotime($value));
+    }
 }

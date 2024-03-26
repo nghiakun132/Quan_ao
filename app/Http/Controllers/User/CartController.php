@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\Cart;
+use App\Models\Discount;
 use App\Models\District;
 use App\Models\Order;
 use App\Models\OrderAddress;
@@ -12,6 +13,7 @@ use App\Models\OrderDetail;
 use App\Models\ProductSize;
 use App\Models\Province;
 use App\Models\User;
+use App\Models\UserDiscount;
 use App\Models\Ward;
 use Carbon\Carbon;
 use Exception;
@@ -20,6 +22,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
@@ -295,5 +298,75 @@ class CartController extends Controller
 
             return redirect()->back()->with('error', 'Có lỗi xảy ra, vui lòng thử lại sau');
         }
+    }
+
+    public function applyDiscount(Request $request)
+    {
+        $error = false;
+        $message = '';
+
+        $discount = Discount::where('code', $request->input('code'))
+            ->where('status', 0)->first();
+
+        if (is_null($discount)) {
+            return redirect()->back()->with('error', 'Mã giảm giá không tồn tại');
+        }
+
+        if ($discount->end_at < Carbon::now()) {
+            $message = 'Mã giảm giá đã hết hạn';
+            $error = true;
+        }
+
+        if ($discount->quantity <= 0) {
+            $message = 'Mã giảm giá đã hết lượt sử dụng';
+            $error = true;
+        }
+
+        if ($error) {
+            return redirect()->back()->with('error', $message);
+        }
+
+        $user = auth()->id();
+
+        $checkUsed = UserDiscount::where('user_id', $user)
+            ->where('discount_id', $discount->id)
+            ->first();
+
+        if (!empty ($checkUsed)) {
+            $message = 'Mã giảm giá đã được sử dụng';
+            $error = true;
+        }
+
+        if ($error) {
+            return redirect()->back()->with('error', $message);
+        }
+
+        Session::put('discount', $discount->code);
+        Session::put('discount_value', $discount->percent);
+        $discount->decrement('quantity');
+
+        UserDiscount::create([
+            'user_id' => $user,
+            'discount_id' => $discount->id,
+        ]);
+
+        return redirect()->back()->with('success', 'Áp dụng mã giảm giá thành công');
+
+    }
+
+    public function removeDiscount()
+    {
+        $discount = Discount::where('code', Session::get('discount'))->first();
+        Session::forget('discount');
+        Session::forget('discount_value');
+
+        $discount->increment('quantity');
+
+        UserDiscount::where('discount_id', $discount->id)
+            ->where('user_id', auth()->id())
+            ->delete();
+
+
+        return redirect()->back()->with('success', 'Xóa mã giảm giá thành công');
     }
 }

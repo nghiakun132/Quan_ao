@@ -79,7 +79,8 @@
                         <form action="{{ route('user.search') }}">
                             <div class="advanced-search">
                                 <div class="input-group">
-                                    <input type="text" placeholder="What do you need?" name="keyword">
+                                    <input type="text" placeholder="Bạn muốn tìm gì?" name="keyword"
+                                        value="{{ request()->keyword }}">
                                     <button type="submit"><i class="ti-search"></i></button>
                                 </div>
                             </div>

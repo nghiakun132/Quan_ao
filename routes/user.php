@@ -32,6 +32,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/don-hang', [OrderController::class, 'index'])->name('user.order');
     Route::get('/don-hang/{code}', [OrderController::class, 'show'])->name('user.order.show');
     Route::post('/huy-don-hang', [OrderController::class, 'cancel'])->name('user.order.cancel');
+
+    Route::post('them-ma',[CartController::class, 'applyDiscount'])->name('user.cart.apply_discount');
+    Route::get('xoa-ma',[CartController::class, 'removeDiscount'])->name('user.cart.remove_discount');
 });
 
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('user.add_to_cart');

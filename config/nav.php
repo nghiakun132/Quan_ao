@@ -43,7 +43,7 @@ return [
     ],
     [
         'name' => 'Mã giảm giá',
-        'route' => 'admin.category.index',
+        'route' => 'admin.discount.index',
         'icon' => 'fas fa-fw fa-percent',
     ],
 ];

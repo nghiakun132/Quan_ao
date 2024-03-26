@@ -64,27 +64,15 @@
                                 <div class="pd-desc">
                                     <p>{!! $product->description !!}</p>
                                     <h4><span style="text-decoration: underline">Giá bán:</span>
-                                        {{ number_format(($product->price * (100 - $product->sale)) / 100) }}
-                                        VNĐ
-                                        @if ($product->sale != 0)
+                                        {{ number_format($product->sale_price) }}
+                                        đ
+                                        @if ($product->sale > 0)
                                             <span>
-                                                {{ number_format($product->price) }} VNĐ
+                                                {{ number_format($product->price) }} đ
                                             </span>
                                         @endif
                                     </h4>
                                 </div>
-                                {{-- <div class="pd-size-choose">
-                                    @foreach ($product->size as $size)
-
-                                        <div class="sc-item">
-                                            <input type="radio" id="{{$size->slug}}-size" name="size" value="{{ $size->id }}"
-                                                @if ($size->pivot->quantity == 0) disabled @endif>
-                                            <label for="{{$size->slug}}-size"
-                                                @if ($size->pivot->quantity == 0) class="out-stock" @endif>
-                                                {{ $size->name }}</label>
-                                        </div>
-                                    @endforeach
-                                </div> --}}
                                 <div class="mb-2">
                                     <label for="size">Size</label>
                                     <select name="size" id="size" class="form-control">
@@ -168,13 +156,13 @@
                                                 <td class="p-catagory">Giá</td>
                                                 <td>
                                                     <div class="p-price">
-                                                        {{ number_format(($product->price * (100 - $product->sale)) / 100) }}VNĐ
+                                                        {{ number_format(($product->price * (100 - $product->sale)) / 100) }}đ
 
 
                                                         @if ($product->sale != 0)
                                                             <code style="text-decoration: line-through">
                                                                 {{ number_format($product->price) }}
-                                                                VNĐ
+                                                                đ
                                                             </code>
                                                         @endif
                                                     </div>

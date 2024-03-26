@@ -58,7 +58,7 @@
                         <a onclick="onFilter()" class="filter-btn">
                             Lọc
                         </a>
-                        <a href="{{ route('user.search',['keyword' => request()->keyword]) }}" class="reset-btn">
+                        <a href="{{ route('user.search', ['keyword' => request()->input('keyword')]) }}" class="filter-btn">
                             Reset
                         </a>
                     </div>
@@ -169,6 +169,27 @@
         </div>
     </section>
 @endsection
-
 @section('extra-script')
-    <script></script>
+    <script>
+        function showPaging(value) {
+            window.location.href =
+                `{{ route('user.search', request()->input()) }}&per_page=${value}`
+        }
+
+        function sortProduct(value) {
+            window.location.href = value
+        }
+
+        function onFilter() {
+            let brand = $("input[name='brand[]']:checked").map(function() {
+                return $(this).val();
+            }).get();
+
+            let minamount = $("#minamount").val();
+            let maxamount = $("#maxamount").val();
+
+            window.location.href =
+                `{{ route('user.search', ['keyword' => request()->input('keyword')]) }}?brand=${brand.join(',')}` +
+                `&gia_tu=${minamount}&gia_den=${maxamount}`
+        }
+    </script>

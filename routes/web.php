@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SizeController;
@@ -84,6 +85,14 @@ Route::prefix('/admin')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('admin.user.index');
             Route::get('/thay-doi-trang-thai/{id}', [UserController::class, 'changeStatus'])
                 ->name('admin.user.changeStatus');
+        });
+
+        Route::group(['prefix' => 'ma-giam-gia'], function () {
+            Route::get('/', [DiscountController::class, 'index'])->name('admin.discount.index');
+            Route::post(THEM_MOI, [DiscountController::class, 'store'])->name('admin.discount.store');
+            Route::get(SUA, [DiscountController::class, 'edit'])->name('admin.discount.edit');
+            Route::post(CAP_NHAT, [DiscountController::class, 'update'])->name('admin.discount.update');
+            Route::delete(XOA, [DiscountController::class, 'destroy'])->name('admin.discount.delete');
         });
     });
 

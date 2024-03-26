@@ -137,24 +137,29 @@
                                 <div class="col-lg-4 col-sm-6">
                                     <div class="product-item">
                                         <div class="pi-pic">
-                                            <a href="{{route('user.product.index', $product->slug)}}">
+                                            <a href="{{ route('user.product.index', $product->slug) }}">
                                                 <div class="product-image">
                                                     <img src="{{ $product->image }}" alt="">
                                                 </div>
                                             </a>
-                                            {{-- <div class="sale pp-sale">Sale</div> --}}
+                                            @if ($product->sale > 0)
+                                                <div class="sale pp-sale">Sale</div>
+                                            @endif
                                             <div class="icon">
                                                 <i class="icon_heart_alt"></i>
                                             </div>
                                         </div>
                                         <div class="pi-text">
                                             {{-- <div class="catagory-name">Towel</div> --}}
-                                            <a href="{{route('user.product.index', $product->slug)}}">
+                                            <a href="{{ route('user.product.index', $product->slug) }}">
                                                 <h5>{{ $product->name }}</h5>
                                             </a>
                                             <div class="product-price">
-                                                {{ number_format($product->price) }}
-                                                {{-- <span>$35.00</span> --}}
+                                                {{ number_format($product->price) }}đ
+                                                @if ($product->sale > 0)
+                                                    <span>{{ number_format($product->sale_price) }}đ</span>
+                                                @endif
+
                                             </div>
                                         </div>
                                     </div>
@@ -195,7 +200,7 @@
 
             window.location.href = `{{ route('user.category.index', $category->slug) }}?brand=${brand.join(',')}` +
                 `&gia_tu=${minamount}&gia_den=${maxamount}`
-
-
         }
     </script>
+
+@endsection

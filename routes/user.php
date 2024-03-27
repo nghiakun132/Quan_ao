@@ -17,6 +17,7 @@ Route::get('/tim-kiem', [SearchController::class, 'index'])->name('user.search')
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get("yeu-thich", [UserController::class, "getWhiteList"])->name("user.white_list");
+    Route::get("yeu-thich/{id}", [UserController::class, "addWhiteList"])->name("user.white_list.add");
     Route::get("dang-xuat", [UserController::class, "logout"])->name("user.logout");
     Route::get("thong-tin-ca-nhan", [UserController::class, "profile"])->name("user.profile");
     Route::post("thong-tin-ca-nhan", [UserController::class, "update"])->name("user.profile.update");

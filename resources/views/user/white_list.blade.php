@@ -1,5 +1,5 @@
 @extends('user.layouts.index')
-@section('title', $category->name)
+@section('title', 'Danh sách yêu thích')
 @section('content')
     <div class="breacrumb-section">
         <div class="container">
@@ -7,7 +7,9 @@
                 <div class="col-lg-12">
                     <div class="breadcrumb-text">
                         <a href="#"><i class="fa fa-home"></i> Trang chủ</a>
-                        <span>{{ $category->name }}</span>
+                        <span>
+                            Danh sách yêu thích
+                        </span>
                     </div>
                 </div>
             </div>
@@ -56,7 +58,7 @@
                         <a onclick="onFilter()" class="filter-btn">
                             Lọc
                         </a>
-                        <a href="{{ route('user.category.index', $category->slug) }}" class="reset-btn">
+                        <a href="{{ route('user.white_list') }}" class="reset-btn">
                             Reset
                         </a>
                     </div>
@@ -79,18 +81,6 @@
                             @endforeach
                         </div>
                     </div>
-                    {{-- <div class="filter-widget">
-                        <h4 class="fw-title">Tags</h4>
-                        <div class="fw-tags">
-                            <a href="#">Towel</a>
-                            <a href="#">Shoes</a>
-                            <a href="#">Coat</a>
-                            <a href="#">Dresses</a>
-                            <a href="#">Trousers</a>
-                            <a href="#">Men's hats</a>
-                            <a href="#">Backpack</a>
-                        </div>
-                    </div> --}}
                 </div>
                 <div class="col-lg-9 order-1 order-lg-2">
                     <div class="product-show-option">
@@ -125,40 +115,36 @@
                             </div>
                             <div class="col-lg-5 col-md-5 text-right">
                                 <p>
-                                    Hiển thị {{ $products->firstItem() }}-{{ $products->lastItem() }} trong
-                                    {{ $products->total() }} sản phẩm
+                                    Hiển thị {{ $whiteLists->firstItem() }}-{{ $whiteLists->lastItem() }} trong
+                                    {{ $whiteLists->total() }} sản phẩm
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div class="product-list">
                         <div class="row">
-                            @forelse ($products as $product)
+                            @forelse ($whiteLists as $whiteList)
                                 <div class="col-lg-4 col-sm-6">
                                     <div class="product-item">
                                         <div class="pi-pic">
-                                            <a href="{{ route('user.product.index', $product->slug) }}">
+                                            <a href="{{ route('user.product.index', $whiteList->product->slug) }}">
                                                 <div class="product-image">
-                                                    <img src="{{ $product->image }}" alt="">
+                                                    <img src="{{ $whiteList->product->image }}" alt="">
                                                 </div>
                                             </a>
-                                            @if ($product->sale > 0)
+                                            @if ($whiteList->product->sale > 0)
                                                 <div class="sale pp-sale">Sale</div>
                                             @endif
-                                            <div class="icon">
-                                                <a href="{{ route('user.white_list.add', $product->id) }}"
-                                                    class="btn-white-list"><i class="icon_heart_alt"></i></a>
-                                            </div>
                                         </div>
                                         <div class="pi-text">
                                             {{-- <div class="catagory-name">Towel</div> --}}
-                                            <a href="{{ route('user.product.index', $product->slug) }}">
-                                                <h5>{{ $product->name }}</h5>
+                                            <a href="{{ route('user.product.index', $whiteList->product->slug) }}">
+                                                <h5>{{ $whiteList->product->name }}</h5>
                                             </a>
                                             <div class="product-price">
-                                                {{ number_format($product->sale_price) }}đ
-                                                @if ($product->sale > 0)
-                                                    <span>{{ number_format($product->price) }}đ</span>
+                                                {{ number_format($whiteList->product->sale_price) }}đ
+                                                @if ($whiteList->product->sale > 0)
+                                                    <span>{{ number_format($whiteList->product->price) }}đ</span>
                                                 @endif
 
                                             </div>
@@ -173,7 +159,7 @@
                         </div>
                     </div>
                     <div class="loading-more">
-                        {{ $products->links() }}
+                        {{ $whiteLists->links() }}
                     </div>
                 </div>
             </div>
@@ -184,7 +170,7 @@
 @section('extra-script')
     <script>
         function showPaging(value) {
-            window.location.href = `{{ route('user.category.index', $category->slug) }}?per_page=${value}`
+            window.location.href = `{{ route('user.white_list') }}?per_page=${value}`
         }
 
         function sortProduct(value) {
@@ -199,7 +185,7 @@
             let minamount = $("#minamount").val();
             let maxamount = $("#maxamount").val();
 
-            window.location.href = `{{ route('user.category.index', $category->slug) }}?brand=${brand.join(',')}` +
+            window.location.href = `{{ route('user.white_list') }}?brand=${brand.join(',')}` +
                 `&gia_tu=${minamount}&gia_den=${maxamount}`
         }
     </script>

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
+use App\Models\Size;
 use App\Models\User;
+use App\Models\WhiteList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -51,7 +54,7 @@ class UserController extends Controller
                 Cookie::queue('remember', 'on', 60 * 24 * 30);
             }
 
-            if (!empty ($request->redirect)) {
+            if (!empty($request->redirect)) {
                 return redirect($request->redirect);
             }
 
@@ -115,10 +118,33 @@ class UserController extends Controller
         return view('user.profile.index', compact('user'));
     }
 
+
+    public function addWhiteList($id)
+    {
+        WhiteList::create([
+            'user_id' => Auth::id(),
+            'product_id' => $id
+        ]);
+
+        return redirect()->back()->with('success', 'Thêm vào danh sách yêu thích thành công');
+    }
+
     public function getWhiteList(Request $request)
     {
-        return view('user.white_list');
+        $brands = Brand::limit(10)->get();
+        $sizes = Size::limit(10)->get();
+
+        $whiteLists = WhiteList::where('user_id', Auth::id())->with(['product'])->paginate($request->input('per_page', 10));
+
+        $data = [
+            'brands' => $brands,
+            'sizes' => $sizes,
+            'whiteLists' => $whiteLists
+        ];
+
+        return view('user.white_list', $data);
     }
+
 
     public function update(Request $request)
     {

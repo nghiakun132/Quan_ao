@@ -55,6 +55,9 @@ class OrderController extends Controller
                     ->increment('quantity', $detail->quantity);
             }
 
+            $order->userDiscount()->delete();
+            $order->discount()->increment('quantity');
+
             DB::commit();
 
             return response()->json([

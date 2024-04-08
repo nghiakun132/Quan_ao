@@ -70,7 +70,7 @@
                 <div class="row">
                     <div class="col-lg-2 col-md-2">
                         <div class="logo">
-                            <a href="">
+                            <a href="{{route('home')}}">
                                 <img src="{{ asset('user/img/logo.png') }}" alt="">
                             </a>
                         </div>

@@ -75,4 +75,43 @@ class Order extends Model
         return $this->hasOne(OrderCancel::class, 'order_id', 'id');
     }
 
+    public function userDiscount()
+    {
+        return $this->hasOne(UserDiscount::class, 'order_id', 'id');
+    }
+
+    public function discount()
+    {
+        return $this->belongsTo(Discount::class, 'coupon_code', 'code');
+    }
+
+    public static function getStatuses()
+    {
+        $statuses = new \stdClass();
+
+        $statuses->{self::PENDING} = [
+            self::APPROVED => 'Xác nhận đơn hàng',
+            self::CANCEL => 'Hủy đơn hàng',
+        ];
+
+        $statuses->{self::APPROVED} = [
+            self::DELIVERING => 'Đang giao hàng',
+            self::CANCEL => 'Hủy đơn hàng',
+        ];
+
+        $statuses->{self::DELIVERING} = [
+            self::DELIVERED => 'Đã giao hàng',
+            self::CANCEL => 'Hủy đơn hàng',
+        ];
+
+        $statuses->{self::DELIVERED} = [
+            self::CANCEL => 'Hủy',
+        ];
+
+        $statuses->{self::CANCEL} = [];
+
+
+
+        return json_encode($statuses, true);
+    }
 }

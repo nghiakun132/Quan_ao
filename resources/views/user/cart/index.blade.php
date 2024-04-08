@@ -95,13 +95,27 @@
                             </div>
                             <div class="discount-coupon">
                                 <h6>Mã giảm giá</h6>
-                                <form action="{{ route('user.cart.apply_discount') }}" class="coupon-form" method="post">
-                                    @csrf
-                                    <input type="text" placeholder="Enter your codes" name="code" />
-                                    <button type="submit" class="site-btn coupon-btn">
-                                        Áp dụng
-                                    </button>
-                                </form>
+                                @if (!session('discount_value'))
+                                    <form action="{{ route('user.cart.apply_discount') }}" class="coupon-form"
+                                        method="post">
+                                        @csrf
+                                        <input type="text" placeholder="Enter your codes" name="code"
+                                            value="{{ old('code') }}" />
+                                        <button type="submit" class="site-btn coupon-btn">
+                                            Áp dụng
+                                        </button>
+                                    </form>
+                                @else
+                                    <div class="alert alert-success" role="alert">
+                                        {{ session('discount') }} - {{ session('discount_value') }}%
+
+                                        <button type="button" class="btn btn-danger btn-sm float-right"
+                                            onclick="window.location.href='{{ route('user.cart.remove_discount') }}'">
+                                            Xóa
+                                        </button>
+                                    </div>
+                                @endif
+
                             </div>
                         </div>
                         <div class="col-lg-4 offset-lg-3">
@@ -116,17 +130,8 @@
                                         @endphp
 
                                         <li class="subtotal">Code giảm giá <span>{{ session('discount') }}</span>
-                                            {{-- button clear code --}}
-
-                                            <button type="button" class="btn btn-danger btn-sm"
-                                                onclick="window.location.href='{{ route('user.cart.remove_discount') }}'">
-                                                Xóa
-                                            </button>
-
                                         </li>
                                     @endif
-
-
                                     <li class="cart-total">Tổng tiền <span>{{ number_format($total) }}</span></li>
                                 </ul>
                                 <a href="{{ route('user.cart.checkout') }}" class="proceed-btn">Thanh toán</a>

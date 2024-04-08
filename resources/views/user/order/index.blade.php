@@ -29,6 +29,9 @@
                                     <th scope="col">STT</th>
                                     <th scope="col">Mã đơn hàng</th>
                                     <th scope="col">Ngày đặt hàng</th>
+                                    <th scope="col">
+                                        Giảm giá
+                                    </th>
                                     <th scope="col">Tổng tiền</th>
                                     <th scope="col">Trạng thái</th>
                                     <th scope="col">Ghi chú</th>
@@ -41,8 +44,15 @@
                                         <th scope="row">{{ $key + 1 }}</th>
                                         <td>{{ $order->code }}</td>
                                         <td>{{ $order->created_at }}</td>
+                                        <td>
+                                            @if ($order->discount > 0)
+                                                {{ number_format($order->discount) }}đ
+                                            @else
+                                                0đ
+                                            @endif
+                                        </td>
 
-                                        <td>{{ number_format($order->total) }} VNĐ</td>
+                                        <td>{{ number_format($order->total) }}đ</td>
                                         <td>
                                             @if ($order->status == 0)
                                                 <span class="badge badge-warning">Chờ xác nhận</span>
@@ -93,9 +103,10 @@
             const options = {
                 '1': 'Không còn nhu cầu mua hàng',
                 '2': 'Không thích sản phẩm',
-                '3': 'Khủng bố',
+                '3': 'Không đúng sản phẩm',
                 '4': 'Không thể giao hàng',
-                '5': 'Khác'
+                '5': 'Sản phẩm lỗi',
+                '6': 'Khác'
             }
 
             const {

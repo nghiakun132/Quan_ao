@@ -52,7 +52,7 @@ class CartController extends Controller
 
             $cart = json_decode($request->cookie('cart'), true);
 
-            if (empty ($cart)) {
+            if (empty($cart)) {
                 $cart = [];
             }
 
@@ -79,7 +79,7 @@ class CartController extends Controller
             )->where('size_id', $request->size)
             ->first();
 
-        if (empty ($cart)) {
+        if (empty($cart)) {
             $cart = new Cart();
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $request->productId;
@@ -163,8 +163,7 @@ class CartController extends Controller
             Cache::forever('provinces', $provinces);
         }
 
-        if (!empty ($address)) {
-
+        if (!empty($address)) {
 
             if (Cache::has('districts')) {
                 $districts = Cache::get('districts_' . $address->province);
@@ -209,7 +208,6 @@ class CartController extends Controller
 
     public function checkoutPost(Request $request)
     {
-
         DB::beginTransaction();
         try {
 
@@ -247,13 +245,21 @@ class CartController extends Controller
                 $productSize->save();
             }
 
+            $discount = 0;
+
+            if (Session::has('discount')) {
+                $discount = $total * Session::get('discount_value') / 100;
+            }
+
+            $total -= $discount;
+
             $order = new Order();
             $order->code = 'DH' . '-' . auth()->id() . Carbon::now()->format('YmdHis');
             $order->user_id = auth()->id();
             $order->shipping_fee = 0;
             $order->total = $total;
             $order->status = 0;
-            $order->discount = 0;
+            $order->discount = $discount;
             $order->note = $request->note;
             $order->save();
 
@@ -289,6 +295,18 @@ class CartController extends Controller
             }
 
             Cart::where('user_id', auth()->user()->id)->delete();
+            if (Session::has('discount')) {
+
+                $discount = Discount::where('code', Session::get('discount'))->first();
+                UserDiscount::where('user_id', auth()->id())
+                    ->where('discount_id', $discount->id)
+                    ->update(['order_id' => $order->id]);
+
+                Session::forget('discount');
+                Session::forget('discount_value');
+
+            }
+
             DB::commit();
 
             return redirect()->route('home')->with('success', 'Đặt hàng thành công');
@@ -323,7 +341,7 @@ class CartController extends Controller
         }
 
         if ($error) {
-            return redirect()->back()->with('error', $message);
+            return redirect()->back()->with('error', $message)->withInput();
         }
 
         $user = auth()->id();
@@ -332,7 +350,7 @@ class CartController extends Controller
             ->where('discount_id', $discount->id)
             ->first();
 
-        if (!empty ($checkUsed)) {
+        if (!empty($checkUsed)) {
             $message = 'Mã giảm giá đã được sử dụng';
             $error = true;
         }

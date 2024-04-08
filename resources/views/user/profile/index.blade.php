@@ -61,11 +61,10 @@
                                             @enderror
                                         </div>
 
-
                                         <div class="d-flex justify-content-end">
                                             <button type="submit" class="btn btn-primary">Cập nhật</button>
-                                            <button type="button" class="btn btn-primary ml-2" id="btn-change-password">Đổi
-                                                mật khẩu</button>
+                                            <button type="button" class="btn btn-primary ml-2" id="btn-change-password">
+                                                Đổi mật khẩu</button>
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
@@ -105,7 +104,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="confirm_password">Nhập lại mật khẩu mới</label>
-                                <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                                <input class="form-control" id="confirm_password" name="confirm_password" type="password"
                                     oninput="$(this).removeClass('is-invalid');$('#error-confirm_password').text('')">
                                 <p class="text-danger" id="error-confirm_password"></p>
                             </div>

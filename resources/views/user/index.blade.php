@@ -77,34 +77,36 @@
                         <div class="product-slider owl-carousel">
                             @foreach ($womenProducts as $womenProduct)
                                 <div class="product-item">
-                                    <div class="pi-pic">
-                                        <img src="{{ $womenProduct->image }}" alt="">
-                                        @if ($womenProduct->sale > 0)
-                                            <div class="sale">Sale</div>
-                                        @endif
-                                        <div class="icon">
-                                            <a href=""><i class="icon_heart_alt"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="pi-text">
-                                        <div class="catagory-name">
-                                            {{ $womenProduct->category->name }}
-                                        </div>
-                                        <a href="#">
-                                            <h5>
-                                                {{ $womenProduct->name }}
-                                            </h5>
-                                        </a>
-                                        <div class="product-price">
+                                    <a href="{{ route('user.product.index', $womenProduct->slug) }}">
+                                        <div class="pi-pic">
+                                            <img src="{{ $womenProduct->image }}" alt="">
                                             @if ($womenProduct->sale > 0)
-                                                {{ number_format($womenProduct->price - ($womenProduct->price * $womenProduct->sale) / 100) }}
-                                                <span>{{ number_format($womenProduct->price) }}</span>
-                                            @else
-                                                ${{ number_format($womenProduct->price) }}
+                                                <div class="sale">Sale</div>
                                             @endif
-                                            {{-- <span>$35.00</span> --}}
+                                            <div class="icon">
+                                                <a href=""><i class="icon_heart_alt"></i></a>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="pi-text">
+                                            <div class="catagory-name">
+                                                {{ $womenProduct->category->name }}
+                                            </div>
+                                            <a href="#">
+                                                <h5>
+                                                    {{ $womenProduct->name }}
+                                                </h5>
+                                            </a>
+                                            <div class="product-price">
+                                                @if ($womenProduct->sale > 0)
+                                                    {{ number_format($womenProduct->price - ($womenProduct->price * $womenProduct->sale) / 100) }}
+                                                    <span>{{ number_format($womenProduct->price) }}</span>
+                                                @else
+                                                    ${{ number_format($womenProduct->price) }}
+                                                @endif
+                                                {{-- <span>$35.00</span> --}}
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
                             @endforeach
 
@@ -188,7 +190,7 @@
     <!-- Women Banner Section End -->
 
     <!-- Deal Of The Week Section Begin-->
-    <section class="deal-of-week set-bg spad" data-setbg="{{ asset('user/img/time-bg.jpg') }}" data-time="03/16/2024">
+    {{-- <section class="deal-of-week set-bg spad" data-setbg="{{ asset('user/img/time-bg.jpg') }}" data-time="04/16/2024">
         <div class="container">
             <div class="col-lg-6 text-center">
                 <div class="section-title">
@@ -221,7 +223,7 @@
                 <a href="#" class="primary-btn">Shop Now</a>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- Deal Of The Week Section End -->
 
     @if (count($menProducts) > 0)
@@ -232,33 +234,35 @@
                         <div class="product-slider owl-carousel">
                             @foreach ($menProducts as $menProduct)
                                 <div class="product-item">
-                                    <div class="pi-pic">
-                                        <img src="{{ $menProduct->image }}" alt="">
-                                        @if ($menProduct->sale > 0)
-                                            <div class="sale">Sale</div>
-                                        @endif
-                                        <div class="icon">
-                                            <i class="icon_heart_alt"></i>
-                                        </div>
-                                    </div>
-                                    <div class="pi-text">
-                                        <div class="catagory-name">
-                                            {{ $menProduct->category->name }}
-                                        </div>
-                                        <a href="{{ route('user.product.index', $menProduct->slug) }}">
-                                            <h5>
-                                                {{ $menProduct->name }}
-                                            </h5>
-                                        </a>
-                                        <div class="product-price">
+                                    <a href="{{ route('user.product.index', $menProduct->slug) }}">
+                                        <div class="pi-pic">
+                                            <img src="{{ $menProduct->image }}" alt="">
                                             @if ($menProduct->sale > 0)
-                                                {{ number_format($menProduct->price - ($menProduct->price * $menProduct->sale) / 100) }}
-                                                <span>{{ number_format($menProduct->price) }}</span>
-                                            @else
-                                                ${{ number_format($menProduct->price) }}
+                                                <div class="sale">Sale</div>
                                             @endif
+                                            <div class="icon">
+                                                <i class="icon_heart_alt"></i>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="pi-text">
+                                            <div class="catagory-name">
+                                                {{ $menProduct->category->name }}
+                                            </div>
+                                            <a href="{{ route('user.product.index', $menProduct->slug) }}">
+                                                <h5>
+                                                    {{ $menProduct->name }}
+                                                </h5>
+                                            </a>
+                                            <div class="product-price">
+                                                @if ($menProduct->sale > 0)
+                                                    {{ number_format($menProduct->price - ($menProduct->price * $menProduct->sale) / 100) }}
+                                                    <span>{{ number_format($menProduct->price) }}</span>
+                                                @else
+                                                    ${{ number_format($menProduct->price) }}
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
                             @endforeach
 
@@ -287,37 +291,39 @@
         <div class="insta-item set-bg" data-setbg="{{ asset('user/img/insta-1.jpg') }}">
             <div class="inside-text">
                 <i class="ti-instagram"></i>
-                <h5><a href="#">colorlib_Collection</a></h5>
+                <h5><a href="#">
+
+                    </a></h5>
             </div>
         </div>
         <div class="insta-item set-bg" data-setbg="{{ asset('user/img/insta-2.jpg') }}">
             <div class="inside-text">
                 <i class="ti-instagram"></i>
-                <h5><a href="#">colorlib_Collection</a></h5>
+                <h5><a href="#"></a></h5>
             </div>
         </div>
         <div class="insta-item set-bg" data-setbg="{{ asset('user/img/insta-3.jpg') }}">
             <div class="inside-text">
                 <i class="ti-instagram"></i>
-                <h5><a href="#">colorlib_Collection</a></h5>
+                <h5><a href="#"></a></h5>
             </div>
         </div>
         <div class="insta-item set-bg" data-setbg="{{ asset('user/img/insta-4.jpg') }}">
             <div class="inside-text">
                 <i class="ti-instagram"></i>
-                <h5><a href="#">colorlib_Collection</a></h5>
+                <h5><a href="#"></a></h5>
             </div>
         </div>
         <div class="insta-item set-bg" data-setbg="{{ asset('user/img/insta-5.jpg') }}">
             <div class="inside-text">
                 <i class="ti-instagram"></i>
-                <h5><a href="#">colorlib_Collection</a></h5>
+                <h5><a href="#"></a></h5>
             </div>
         </div>
         <div class="insta-item set-bg" data-setbg="{{ asset('user/img/insta-6.jpg') }}">
             <div class="inside-text">
                 <i class="ti-instagram"></i>
-                <h5><a href="#">colorlib_Collection</a></h5>
+                <h5><a href="#"></a></h5>
             </div>
         </div>
     </div>

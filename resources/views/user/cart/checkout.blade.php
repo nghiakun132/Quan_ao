@@ -115,6 +115,19 @@
                                         @endphp
                                     @endforeach
 
+                                    @if (session('discount_value'))
+                                        <li class="total-price">Giảm giá <span>{{ session('discount_value') }}%</span></li>
+
+                                        <li class="total-price">
+                                            Số tiền được giảm
+                                            <span>{{ number_format(($total * session('discount_value')) / 100) }}đ</span>
+                                        </li>
+
+                                        @php
+                                            $total = $total - ($total * session('discount_value')) / 100;
+                                        @endphp
+                                    @endif
+
                                     <li class="total-price">Tổng tiền <span>{{ number_format($total) }}đ</span></li>
                                 </ul>
                                 <div class="order-btn">

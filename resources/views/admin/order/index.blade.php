@@ -160,23 +160,8 @@
             });
         }
 
-        let orderList = {
-            "0": {
-                '1': 'Đã xác nhận',
-                '2': 'Đang giao hàng',
-                '3': 'Đã giao hàng',
-                '4': 'Đã hủy'
-            },
-            "1": {
-                '2': 'Đang giao hàng',
-                '3': 'Đã giao hàng',
-                '4': 'Đã hủy'
-            },
-            "2": {
-                '3': 'Đã giao hàng',
-                '4': 'Đã hủy'
-            },
-            "3": {}
-        }
+        let demo = @json(\App\Models\Order::getStatuses())
+
+        let orderList = JSON.parse(demo)
     </script>
 @endsection

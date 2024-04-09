@@ -121,7 +121,10 @@ class UserController extends Controller
 
     public function addWhiteList($id)
     {
-        WhiteList::create([
+        WhiteList::updateOrCreate([
+            'user_id' => Auth::id(),
+            'product_id' => $id
+        ], [
             'user_id' => Auth::id(),
             'product_id' => $id
         ]);
@@ -134,7 +137,8 @@ class UserController extends Controller
         $brands = Brand::limit(10)->get();
         $sizes = Size::limit(10)->get();
 
-        $whiteLists = WhiteList::where('user_id', Auth::id())->with(['product'])->paginate($request->input('per_page', 10));
+        $whiteLists = WhiteList::where('user_id', Auth::id())
+            ->with(['product'])->paginate($request->input('per_page', 10));
 
         $data = [
             'brands' => $brands,

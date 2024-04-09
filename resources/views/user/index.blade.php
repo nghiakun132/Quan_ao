@@ -84,7 +84,8 @@
                                                 <div class="sale">Sale</div>
                                             @endif
                                             <div class="icon">
-                                                <a href=""><i class="icon_heart_alt"></i></a>
+                                                <a href="{{ route('user.white_list.add', $womenProduct->id) }}"><i
+                                                        class="icon_heart_alt"></i></a>
                                             </div>
                                         </div>
                                         <div class="pi-text">
@@ -241,7 +242,9 @@
                                                 <div class="sale">Sale</div>
                                             @endif
                                             <div class="icon">
-                                                <i class="icon_heart_alt"></i>
+                                                <a href="{{ route('user.white_list.add', $menProduct->id) }}"
+                                                    style="color: red; text-decoration: none;"><i
+                                                        class="icon_heart_alt"></i></a>
                                             </div>
                                         </div>
                                         <div class="pi-text">

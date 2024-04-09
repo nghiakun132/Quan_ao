@@ -137,6 +137,19 @@
                     @enderror
                 </div>
                 <div
+                class="form-group
+                @error('sale')
+                    text-danger
+                @enderror">
+                <label for="sale">Giảm giá</label>
+                <input type="number" class="form-control" name="sale" id="sale" value="{{ old('sale') }}">
+                @error('sale')
+                    <p class="text-danger">
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
+                <div
                     class="form-group
                     @error('description')
                         text-danger

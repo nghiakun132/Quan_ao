@@ -64,13 +64,14 @@ class CategoryController extends Controller
         $productId = $products->pluck('id')->toArray();
         $sizeId = ProductSize::whereIn('product_id', $productId)->pluck('size_id')->toArray();
         $sizes = Size::whereIn('id', $sizeId)->get();
-        $products = $products->paginate($request->input('per_page', 10));
+        $products = $products->paginate($request->input('per_page', 15));
         $data = [
             'category' => $category,
             'products' => $products,
             'brands' => $brands,
             'sizes' => $sizes,
         ];
+
         return view('user.category.index', $data);
     }
 

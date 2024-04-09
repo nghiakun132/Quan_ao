@@ -73,6 +73,19 @@
                         </p>
                     @enderror
                 </div>
+                <div
+                class="form-group
+                @error('sale')
+                    text-danger
+                @enderror">
+                <label for="sale">Giá</label>
+                <input type="number" class="form-control" name="sale" id="sale" value="{{ $product->sale }}">
+                @error('sale')
+                    <p class="text-danger">
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
 
                 <div
                     class="form-group

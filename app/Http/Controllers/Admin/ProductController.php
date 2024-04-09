@@ -51,6 +51,7 @@ class ProductController extends Controller
             'brand_id' => 'required',
             'description' => 'max:1000',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'sale' => 'numeric|min:0|max:100',
         ], [
             'name.required' => 'Tên sản phẩm không được để trống',
             'name.max' => 'Tên sản phẩm không được quá 254 ký tự',
@@ -65,6 +66,9 @@ class ProductController extends Controller
             'image.image' => 'Ảnh sản phẩm phải là ảnh',
             'image.mimes' => 'Ảnh sản phẩm phải có định dạng jpeg, png, jpg, gif, svg',
             'image.max' => 'Ảnh sản phẩm không được quá 2048 ký tự',
+            'sale.numeric' => 'Giảm giá phải là số',
+            'sale.min' => 'Giảm giá không được nhỏ hơn 0',
+            'sale.max' => 'Giảm giá không được lớn hơn 100',
         ]);
 
         $avatar = $request->file('image');
@@ -81,6 +85,7 @@ class ProductController extends Controller
         $product->brand_id = $request->brand_id;
         $product->description = $request->description;
         $product->image = $avatarName;
+        $product->sale = $request->sale;
         $product->save();
 
         $sizes = $request->size;
@@ -150,6 +155,7 @@ class ProductController extends Controller
             'category_id' => 'required',
             'brand_id' => 'required',
             'description' => 'max:1000',
+            'sale' => 'numeric|min:0|max:100',
         ], [
             'name.required' => 'Tên sản phẩm không được để trống',
             'name.max' => 'Tên sản phẩm không được quá 254 ký tự',
@@ -160,6 +166,9 @@ class ProductController extends Controller
             'category_id.required' => 'Danh mục không được để trống',
             'brand_id.required' => 'Nhà sản xuất không được để trống',
             'description.max' => 'Mô tả không được quá 1000 ký tự',
+            'sale.numeric' => 'Giảm giá phải là số',
+            'sale.min' => 'Giảm giá không được nhỏ hơn 0',
+            'sale.max' => 'Giảm giá không được lớn hơn 100',
         ]);
 
         $avatar = $request->file('image');
@@ -176,6 +185,7 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
         $product->description = $request->description;
+        $product->sale = $request->sale;
         $product->save();
 
         $sizes = $request->size;

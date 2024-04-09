@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -45,6 +47,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'birthday' => 'datetime'
     ];
 
     public function addresses()
@@ -66,7 +69,6 @@ class User extends Authenticatable
 
     public function setBirthdayAttribute($value)
     {
-
-        $this->attributes['birthday'] = date('Y-m-d H:i:s', strtotime($value));
+        $this->attributes['birthday'] = Carbon::createFromFormat('Y-m-d', $value)->format('Y-m-d');
     }
 }

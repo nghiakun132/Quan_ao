@@ -35,6 +35,10 @@
                                     <div class="zoom-icon">
                                         <i class="fa fa-search-plus"></i>
                                     </div>
+
+                                    @php
+                                        break;
+                                    @endphp
                                 @endforeach
                             </div>
                             <div class="product-thumbs">

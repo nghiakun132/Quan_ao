@@ -34,4 +34,9 @@ class Address extends Model
     {
         return $this->belongsTo(Ward::class, 'ward');
     }
+
+    public function getFullAddressAttribute()
+    {
+        return $this->address . ', ' . $this->ward()->first()->name . ', ' . $this->district()->first()->name . ', ' . $this->province()->first()->name;
+    }
 }

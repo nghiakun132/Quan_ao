@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Address;
 use App\Models\Brand;
+use App\Models\Province;
 use App\Models\Size;
 use App\Models\User;
+use App\Models\Ward;
 use App\Models\WhiteList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -211,5 +215,59 @@ class UserController extends Controller
             ],
             'status' => 'error'
         ], 400);
+    }
+
+    public function getAddress()
+    {
+        $addresses = Address::where('user_id', Auth::id())->get();
+        if (Cache::has('provinces')) {
+            $provinces = Cache::get('provinces');
+        } else {
+            $provinces = Province::pluck('name', 'id')->toArray();
+
+            $provinces = collect($provinces)->map(function ($value, $key) {
+                return [
+                    'id' => $key,
+                    'name' => $value,
+                ];
+            })->toArray();
+
+            Cache::forever('provinces', $provinces);
+        }
+
+
+        return view('user.address.index', compact('addresses', 'provinces'));
+    }
+
+    public function addAddress(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'province' => 'required',
+            'district' => 'required',
+            'ward' => 'required',
+        ], [
+            'name.required' => 'Tên không được để trống',
+            'phone.required' => 'Số điện thoại không được để trống',
+            'address.required' => 'Địa chỉ không được để trống',
+            'province.required' => 'Tỉnh/Thành phố không được để trống',
+            'district.required' => 'Quận/Huyện không được để trống',
+            'ward.required' => 'Phường/Xã không được để trống',
+        ]);
+
+        $address = new Address([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'province' => $request->province,
+            'district' => $request->district,
+            'ward' => $request->ward,
+            'user_id' => Auth::id()
+        ]);
+
+        $address->save();
+
     }
 }

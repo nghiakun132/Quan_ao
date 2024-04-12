@@ -146,7 +146,6 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
-
         $product = Product::find($id);
 
         $this->validate($request, [

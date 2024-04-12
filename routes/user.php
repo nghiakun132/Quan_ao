@@ -21,6 +21,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get("dang-xuat", [UserController::class, "logout"])->name("user.logout");
     Route::get("thong-tin-ca-nhan", [UserController::class, "profile"])->name("user.profile");
     Route::post("thong-tin-ca-nhan", [UserController::class, "update"])->name("user.profile.update");
+    Route::get('dia-chi-giao-hang', [UserController::class, 'getAddress'])->name('user.address');
+    Route::post('dia-chi-giao-hang', [UserController::class, 'addAddress'])->name('user.address.store');
+    Route::get('dia-chi-giao-hang/{id}', [UserController::class, 'editAddress'])->name('user.address.edit');
+    Route::post('dia-chi-giao-hang/{id}', [UserController::class, 'updateAddress'])->name('user.address.update');
+    Route::get('dia-chi-giao-hang/xoa/{id}', [UserController::class, 'deleteAddress'])->name('user.address.delete');
+    Route::get('/mac-dinh/{id}', [UserController::class, 'setDefaultAddress'])->name('user.address.default');
 
     Route::post('/doi-mat-khau', [UserController::class, 'changePassword'])->name('user.change_password');
 
@@ -34,8 +40,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/don-hang/{code}', [OrderController::class, 'show'])->name('user.order.show');
     Route::post('/huy-don-hang', [OrderController::class, 'cancel'])->name('user.order.cancel');
 
-    Route::post('them-ma',[CartController::class, 'applyDiscount'])->name('user.cart.apply_discount');
-    Route::get('xoa-ma',[CartController::class, 'removeDiscount'])->name('user.cart.remove_discount');
+    Route::post('them-ma', [CartController::class, 'applyDiscount'])->name('user.cart.apply_discount');
+    Route::get('xoa-ma', [CartController::class, 'removeDiscount'])->name('user.cart.remove_discount');
 });
 
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('user.add_to_cart');

@@ -6,7 +6,7 @@
     </h3>
     <div class="row">
         <div class="col-12">
-            <form action="{{ route('admin.product.update', $product->id) }}" method="post">
+            <form action="{{ route('admin.product.update', $product->id) }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div
                     class="form-group
@@ -74,18 +74,18 @@
                     @enderror
                 </div>
                 <div
-                class="form-group
+                    class="form-group
                 @error('sale')
                     text-danger
                 @enderror">
-                <label for="sale">Giá</label>
-                <input type="number" class="form-control" name="sale" id="sale" value="{{ $product->sale }}">
-                @error('sale')
-                    <p class="text-danger">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
+                    <label for="sale">Giá</label>
+                    <input type="number" class="form-control" name="sale" id="sale" value="{{ $product->sale }}">
+                    @error('sale')
+                        <p class="text-danger">
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </div>
 
                 <div
                     class="form-group
@@ -114,6 +114,16 @@
                             {{ $message }}
                         </p>
                     @enderror
+                </div>
+                <div class="form-group">
+                    <label for="images">Hình ảnh</label>
+                    <input type="file" class="form-control" name="images[]" id="images" multiple
+                        onchange="previewImages()">
+                    <div class="preview-image">
+                        @foreach ($product->images as $image)
+                            <img src="{{ $image->path }}" alt="" style="width: 100px; height: 100px">
+                        @endforeach
+                    </div>
                 </div>
                 <div>
                     <h4>
@@ -201,5 +211,33 @@
                 $(this).closest('tr').remove();
             });
         });
+
+        function previewImages() {
+            var preview = document.querySelector('.preview-image');
+            var fileInput = document.querySelector("#images");
+
+            if (fileInput.files.length === 0) {
+                return;
+            }
+
+            preview.innerHTML = "";
+
+            Object.values(fileInput.files).forEach(function(item) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+
+                    var img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.style.width = "100px";
+                    img.style.height = "100px";
+                    img.style.margin = "4px";
+                    preview.appendChild(img);
+                };
+
+                reader.readAsDataURL(item);
+            });
+
+        }
     </script>
 @endsection

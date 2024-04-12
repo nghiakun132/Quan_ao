@@ -18,6 +18,9 @@
     <section class="product-shop spad page-details">
         <div class="container">
             <div class="row">
+                <div class="col-lg-12 mb-4">
+                    @include('user.nav')
+                </div>
                 <div class="col-lg-12">
                     <form action="{{ route('user.profile.update', $user->id) }}" method="POST"
                         enctype="multipart/form-data">

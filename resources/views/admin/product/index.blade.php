@@ -40,7 +40,9 @@
                         @forelse ($products as $product)
                             <tr>
                                 <td>{{ $product->id }}</td>
-                                <td>{{ $product->name }}</td>
+                                <td><a href="{{ route('user.product.index', $product->slug) }}" target="_blank"
+                                        rel="noopener noreferrer">{{ $product->name }}</a>
+                                </td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>{{ $product->brand->name }}</td>
                                 <td>
